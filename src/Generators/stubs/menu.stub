@@ -1,0 +1,16 @@
+<?php
+
+namespace DummyNamespace;
+
+use Sciarcinski\LaravelMenu\Services\Menu;
+
+class DummyClass extends Menu
+{
+    /**
+     * Menu items
+     */
+    public function items()
+    {
+        // $this->add()
+    }
+}

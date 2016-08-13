@@ -1,0 +1,108 @@
+<?php
+
+namespace Sciarcinski\LaravelMenu;
+
+use Sciarcinski\LaravelMenu\Item;
+
+class Builder
+{
+    /** @var Item */
+    protected $item;
+
+    public function __construct(Item $item)
+    {
+        $this->item = $item;
+    }
+    
+    /**
+     * @param $title
+     * @param $route
+     * @param $icon_left
+     * @param $class
+     * @return $this
+     */
+    public function add($title, $route = null, $icon_left = null, $class = null)
+    {
+        $child = new Item($this->item->service(), true);
+        
+        $this->item->addChild($child);
+        
+        return $child->add($title, $route, $icon_left, $class);
+    }
+    
+    /**
+     * @param $title
+     * @return $this
+     */
+    public function title($title)
+    {
+        $this->item->setTitle($title);
+
+        return $this;
+    }
+
+    /**
+     * @param $route
+     * @return $this
+     */
+    public function route($route)
+    {
+        $this->item->setRoute($route);
+
+        return $this;
+    }
+    
+    /**
+     * @param $url
+     * @return $this
+     */
+    public function url($url)
+    {
+        $this->item->setUrl($url);
+    }
+
+    /**
+     * @param $class
+     * @return $this
+     */
+    public function class_add($class)
+    {
+        $this->item->addClass($class);
+
+        return $this;
+    }
+    
+    /**
+     * Remove class
+     * 
+     * @param $class
+     */
+    public function class_remove($class)
+    {
+        $this->item->removeClass($class);
+
+        return $this;
+    }
+
+    /**
+     * @param $icon
+     * @return $this
+     */
+    public function icon_left($icon)
+    {
+        $this->item->setIconLeft($icon);
+
+        return $this;
+    }
+    
+    /**
+     * @param $icon
+     * @return $this
+     */
+    public function icon_right($icon)
+    {
+        $this->item->setIconRight($icon);
+
+        return $this;
+    }
+}
