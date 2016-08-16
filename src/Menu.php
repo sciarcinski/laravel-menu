@@ -16,7 +16,8 @@ class Menu
     /**
      * @param Application $app
      */
-    public function __construct($app) {
+    public function __construct($app)
+    {
         $this->app = $app;
     }
 
