@@ -43,12 +43,27 @@ class Builder
 
     /**
      * @param $route
+     * @param $parameters
+     * 
      * @return $this
      */
-    public function route($route)
+    public function route($route, $parameters = [])
     {
-        $this->item->setRoute($route);
-
+        $this->item->setRoute($route, $parameters);
+        
+        return $this;
+    }
+    
+    /**
+     * @param $action
+     * @param $parameters
+     * 
+     * @return $this
+     */
+    public function action($action, $parameters = [])
+    {
+        $this->item->setAction($action, $parameters);
+        
         return $this;
     }
     

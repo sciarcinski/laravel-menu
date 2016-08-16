@@ -2,12 +2,23 @@
 
 namespace Sciarcinski\LaravelMenu;
 
+use Illuminate\Foundation\Application;
 use Sciarcinski\LaravelMenu\Services\Menu as MenuService;
 
 class Menu
 {
     /** @var MenuService */
     protected $service;
+    
+    /** @var Application */
+    protected $app;
+
+    /**
+     * @param Application $app
+     */
+    public function __construct($app) {
+        $this->app = $app;
+    }
 
     /**
      * Get
@@ -61,10 +72,7 @@ class Menu
     }
 
     /**
-     * Get items
-     * 
-     * @param $items
-     * @return array
+     * Detect active
      */
     protected function detectActive()
     {

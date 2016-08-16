@@ -12,13 +12,25 @@ class Item
     protected $service;
 
     protected $title;
+    
     protected $route;
+    
+    protected $action;
+    
+    protected $parameters;
+    
     protected $url;
+    
     protected $icon_left;
+    
     protected $icon_right;
+    
     protected $class = [];
+    
     protected $children;
+    
     protected $active = false;
+    
     protected $it_child;
 
     public function __construct(Service $service, $it_child = false)
@@ -92,13 +104,29 @@ class Item
     
     /**
      * @param $route
+     * @param $parameters
      */
-    public function setRoute($route)
+    public function setRoute($route, $parameters = [])
     {
         $this->route = $route;
+        $this->parameters = $parameters;
         
         if (!is_null($this->route) && !empty($this->route)) {
-            $this->setUrl(route($this->route));
+            $this->setUrl(route($this->route, $parameters));
+        }
+    }
+    
+    /**
+     * @param $action
+     * @param $parameters
+     */
+    public function setAction($action, $parameters = [])
+    {
+        $this->action = $action;
+        $this->parameters = $parameters;
+        
+        if (!is_null($this->action) && !empty($this->action)) {
+            $this->setUrl(action($this->action, $parameters));
         }
     }
     

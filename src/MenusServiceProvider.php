@@ -22,7 +22,7 @@ class MenusServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton('menu', function ($app) {
-            return new Menu();
+            return new Menu($app);
         });
     }
     
