@@ -31,6 +31,8 @@ class Item
     
     protected $active = false;
     
+    protected $active_if_route;
+
     protected $it_child;
 
     public function __construct(Service $service, $it_child = false)
@@ -137,6 +139,14 @@ class Item
     {
         $this->url = $url;
     }
+    
+    /**
+     * @param array $routes
+     */
+    public function setActiveIfRoute(array $routes)
+    {
+        $this->active_if_route = $routes;
+    }
 
     /**
      * @param $icon
@@ -195,7 +205,7 @@ class Item
     /**
      * @param $icon
      * @param $default
-     * @param $class
+     * @param $type
      * @return string|null
      */
     protected function getIcon($icon, $default, $type)
@@ -245,6 +255,25 @@ class Item
         return $this->route === $route;
     }
     
+    /**
+     * Is route active
+     * 
+     * @param $route
+     * @return bool
+     */
+    public function isRouteActive($route)
+    {
+        if ($this->isRoute($route)) {
+            return true;
+        }
+        
+        if (is_array($this->active_if_route) && in_array($route, $this->active_if_route)) {
+            return true;
+        }
+        
+        return false;
+    }
+
     /**
      * Set active
      * 

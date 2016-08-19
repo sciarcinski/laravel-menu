@@ -120,4 +120,17 @@ class Builder
 
         return $this;
     }
+    
+    /**
+     * @param $routes
+     * @return $this
+     */
+    public function active_if_route($routes)
+    {
+        $routes = is_array($routes) ? $routes : func_get_args();
+        
+        $this->item->setActiveIfRoute($routes);
+        
+        return $this;
+    }
 }
