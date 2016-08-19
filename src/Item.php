@@ -165,6 +165,20 @@ class Item
     }
     
     /**
+     * Set active
+     * 
+     * @param $bool
+     */
+    public function setActive(bool $bool)
+    {
+        $this->active = $bool;
+        
+        $this->active ?
+            $this->addClass('active') :
+            $this->removeClass('active');
+    }
+    
+    /**
      * @return string
      */
     public function getTitle()
@@ -205,7 +219,7 @@ class Item
     /**
      * @param $icon
      * @param $default
-     * @param $type
+     * @param $class
      * @return string|null
      */
     protected function getIcon($icon, $default, $type)
@@ -273,17 +287,6 @@ class Item
         
         return false;
     }
-
-    /**
-     * Set active
-     * 
-     * @param $bool
-     */
-    public function active(bool $bool)
-    {
-        $this->active = $bool;
-        $this->addClass('active');
-    }
     
     /**
      * Has children
@@ -293,5 +296,15 @@ class Item
     public function hasChildren()
     {
         return (!is_null($this->children) || !empty($this->children));
+    }
+    
+    /**
+     * Has item active
+     * 
+     * @return bool
+     */
+    public function hasActive()
+    {
+        return $this->active;
     }
 }

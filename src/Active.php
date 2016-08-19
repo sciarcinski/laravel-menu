@@ -25,7 +25,7 @@ class Active
         foreach ($items as $key => $item) {
             if ($item->isRouteActive($this->route_name)) {
                 $this->active_parent = $active;
-                $item->active(true);
+                $item->setActive(true);
             }
             
             if ($item->hasChildren()) {
@@ -47,7 +47,7 @@ class Active
             $parent = is_null($parent) ? $this->active_parent : $parent;
 
             $item = array_get($items, array_shift($parent));
-            $item->active(true);
+            $item->setActive(true);
 
             if (!empty($parent)) {
                 $this->detectParent($item->getChildren(), $parent);
