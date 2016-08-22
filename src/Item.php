@@ -295,7 +295,7 @@ class Item
      */
     public function hasChildren()
     {
-        return (!is_null($this->children) || !empty($this->children));
+        return (!is_null($this->children) && !empty($this->children));
     }
     
     /**

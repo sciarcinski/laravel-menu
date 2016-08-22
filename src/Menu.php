@@ -88,7 +88,9 @@ class Menu
     }
     
     /**
-     * @param $parent
+     * @param $parent_url
+     * @param $parent_title
+     * 
      * @return string
      */
     public function breadcrumb($parent_url = null, $parent_title = null)
