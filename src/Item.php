@@ -307,4 +307,12 @@ class Item
     {
         return $this->active;
     }
+    
+    /**
+     * @return bool
+     */
+    public function itChild()
+    {
+        return $this->it_child;
+    }
 }

@@ -23,13 +23,17 @@ class Active
     public function detect($items, $active = [])
     {
         foreach ($items as $key => $item) {
+            if (!$item->itChild()) {
+                $active = [];
+            }
+            
             if ($item->isRouteActive($this->route_name)) {
                 $this->active_parent = $active;
                 $item->setActive(true);
             }
             
             if ($item->hasChildren()) {
-                $active[] = $key;
+                $active[$key] = $key;
                 $this->detect($item->getChildren(), $active);
             }
         }
