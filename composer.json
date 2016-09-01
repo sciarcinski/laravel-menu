@@ -16,5 +16,6 @@
         "psr-4": {
             "Sciarcinski\\LaravelMenu\\": "src/"
         }
-    }
+    },
+	"minimum-stability": "stable"
 }
