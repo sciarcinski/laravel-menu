@@ -2,6 +2,7 @@
 
 namespace Sciarcinski\LaravelMenu;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Application;
 use Sciarcinski\LaravelMenu\Services\Menu as MenuService;
 
@@ -13,6 +14,9 @@ class Menu
     /** @var Application */
     protected $app;
     
+    /** @var Model */
+    protected $model;
+
     protected $instance = [];
 
     /**
@@ -29,6 +33,18 @@ class Menu
     protected function getInstance($menu)
     {
         $this->service = $this->instance[$menu];
+    }
+    
+    /**
+     * @param Model $model
+     * 
+     * @return $this
+     */
+    public function model(Model $model)
+    {
+        $this->model = $model;
+        
+        return $this;
     }
 
     /**
@@ -88,6 +104,24 @@ class Menu
     }
     
     /**
+     * Get nav tabs
+     * 
+     * @return string
+     */
+    public function navTabs()
+    {
+        $html = '';
+        
+        foreach ($this->service->get() as $item) {
+            $html .= '<li class="'.$item->getClass().'">';
+            $html .= '<a href="'.$item->getUrl().'">'.$item->getTitle().'</a>';
+            $html .= '</li>';
+        }
+        
+        return $html;
+    }
+
+    /**
      * @param $parent_url
      * @param $parent_title
      * 
@@ -106,7 +140,7 @@ class Menu
      */
     protected function getMenu($menu)
     {
-        $this->service = new $menu();
+        $this->service = new $menu($this->getModelAndForget());
         $this->service->items();
         
         return $this->service;
@@ -137,5 +171,18 @@ class Menu
     protected function pullInstance($menu)
     {
         $this->instance[$menu] = $this->service;
+    }
+    
+    protected function getModelAndForget()
+    {
+        if (is_null($this->model)) {
+            return;
+        }
+        
+        $model = clone $this->model;
+        
+        $this->model = null;
+        
+        return $model;
     }
 }

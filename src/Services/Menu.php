@@ -2,6 +2,7 @@
 
 namespace Sciarcinski\LaravelMenu\Services;
 
+use Illuminate\Database\Eloquent\Model;
 use Sciarcinski\LaravelMenu\Item;
 use Sciarcinski\LaravelMenu\MenuInterface;
 use Sciarcinski\LaravelMenu\Builder;
@@ -10,6 +11,16 @@ abstract class Menu implements MenuInterface
 {
     protected $items = [];
     
+    protected $model;
+    
+    /**
+     * @param null|Model $model
+     */
+    public function __construct($model)
+    {
+        $this->model = $model;
+    }
+
     /**
      * Get items
      * 
@@ -83,5 +94,13 @@ abstract class Menu implements MenuInterface
             case 'right':
                 return '<span class="pull-right-container"><i class="fa '.$icon.' pull-right"></i></span>';
         }
+    }
+    
+    /**
+     * @return bool
+     */
+    protected function hasModel()
+    {
+        return $this->model instanceof Model;
     }
 }
