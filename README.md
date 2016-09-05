@@ -5,7 +5,7 @@ Laravel 5.2 Menu
 
 1. Run
 ```php   
-composer require sciarcinski/laravel-menu 0.2.1
+composer require sciarcinski/laravel-menu 0.2.2
 ```     
 in console to install this module
 

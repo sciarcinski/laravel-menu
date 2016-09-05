@@ -133,4 +133,17 @@ class Builder
         
         return $this;
     }
+    
+    /**
+     * @param $request
+     * @return $this
+     */
+    public function active_if_request($request)
+    {
+        $request = is_array($request) ? $request : func_get_args();
+        
+        $this->item->setActiveIfRequest($request);
+        
+        return $this;
+    }
 }

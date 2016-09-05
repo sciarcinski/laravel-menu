@@ -173,6 +173,9 @@ class Menu
         $this->instance[$menu] = $this->service;
     }
     
+    /**
+     * @return Model
+     */
     protected function getModelAndForget()
     {
         if (is_null($this->model)) {
