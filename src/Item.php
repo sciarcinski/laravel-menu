@@ -33,9 +33,13 @@ class Item
     
     protected $it_child;
     
-    public $active_if_route;
+    protected $active_is_route;
     
-    public $active_if_request;
+    protected $active_is_request;
+    
+    protected $not_active_is_route;
+    
+    protected $not_active_is_request;
 
     public function __construct(Service $service, $it_child = false)
     {
@@ -147,7 +151,7 @@ class Item
      */
     public function setActiveIfRoute(array $routes)
     {
-        $this->active_if_route = $routes;
+        $this->active_is_route = $routes;
     }
     
     /**
@@ -155,7 +159,7 @@ class Item
      */
     public function setActiveIfRequest(array $request)
     {
-        $this->active_if_request = $request;
+        $this->active_is_request = $request;
     }
 
     /**
@@ -186,22 +190,6 @@ class Item
         $this->active ?
             $this->addClass('active') :
             $this->removeClass('active');
-    }
-    
-    /**
-     * @return string
-     */
-    public function getTitle()
-    {
-        return $this->title;
-    }
-    
-    /**
-     * @return string
-     */
-    public function getRoute()
-    {
-        return $this->route;
     }
     
     /**
@@ -244,14 +232,6 @@ class Item
     }
 
     /**
-     * @return array|null
-     */
-    public function getChildren()
-    {
-        return $this->children;
-    }
-    
-    /**
      * @return string
      */
     public function getClass()
@@ -288,10 +268,25 @@ class Item
     }
     
     /**
-     * @return bool
+     * @param $property
+     * @param $value
      */
-    public function itChild()
+    public function __set($property, $value)
     {
-        return $this->it_child;
+        if (property_exists($this, $property)) {
+            $this->$property = $value;
+        }
+    }
+    
+    /**
+     * @param $property
+     * 
+     * @return mixed
+     */
+    public function __get($property)
+    {
+        if (property_exists($this, $property)) {
+            return $this->$property;
+        }
     }
 }

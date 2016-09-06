@@ -81,11 +81,11 @@ class Menu
         
         foreach ($items as $item) {
             $html .= '<li class="'.$item->getClass().'">';
-            $html .= '<a href="'.$item->getUrl().'">'.$item->getIconLeft().'<span>'.$item->getTitle().'</span>'.$item->getIconRight().'</a>';
+            $html .= '<a href="'.$item->getUrl().'">'.$item->getIconLeft().'<span>'.$item->title.'</span>'.$item->getIconRight().'</a>';
             
             if ($item->hasChildren()) {
                 $html .= '<ul class="treeview-menu">';
-                $html .= $this->render($item->getChildren());
+                $html .= $this->render($item->children);
                 $html .= '</ul>';
             }
             

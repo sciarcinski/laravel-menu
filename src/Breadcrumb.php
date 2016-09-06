@@ -76,7 +76,7 @@ class Breadcrumb
         if ($item instanceof Item) {
             $this->breadcrumb[] = (object)[
                 'url' => $item->getUrl(),
-                'title' => $item->getTitle(),
+                'title' => $item->title,
             ];
         }
     }
@@ -89,7 +89,7 @@ class Breadcrumb
     protected function children($item)
     {
         if ($item instanceof Item && $item->hasChildren()) {
-            $this->render($item->getChildren());
+            $this->render($item->children);
         }
     }
 }

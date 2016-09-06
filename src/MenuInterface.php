@@ -26,4 +26,6 @@ interface MenuInterface
     public function iconChildLeft();
     
     public function getIcon($icon, $type);
+    
+    public function hasModel();
 }

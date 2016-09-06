@@ -80,7 +80,7 @@ class Builder
      * @param $class
      * @return $this
      */
-    public function class_add($class)
+    public function classAdd($class)
     {
         $this->item->addClass($class);
 
@@ -92,7 +92,7 @@ class Builder
      * 
      * @param $class
      */
-    public function class_remove($class)
+    public function classRemove($class)
     {
         $this->item->removeClass($class);
 
@@ -103,9 +103,9 @@ class Builder
      * @param $icon
      * @return $this
      */
-    public function icon_left($icon)
+    public function iconLeft($icon)
     {
-        $this->item->setIconLeft($icon);
+        $this->item->icon_left = $icon;
 
         return $this;
     }
@@ -114,9 +114,9 @@ class Builder
      * @param $icon
      * @return $this
      */
-    public function icon_right($icon)
+    public function iconRight($icon)
     {
-        $this->item->setIconRight($icon);
+        $this->item->icon_right = $icon;
 
         return $this;
     }
@@ -125,11 +125,11 @@ class Builder
      * @param $routes
      * @return $this
      */
-    public function active_if_route($routes)
+    public function activeIsRoute($routes)
     {
         $routes = is_array($routes) ? $routes : func_get_args();
         
-        $this->item->setActiveIfRoute($routes);
+        $this->item->active_is_route = $routes;
         
         return $this;
     }
@@ -138,11 +138,37 @@ class Builder
      * @param $request
      * @return $this
      */
-    public function active_if_request($request)
+    public function activeIsRequest($request)
     {
         $request = is_array($request) ? $request : func_get_args();
         
-        $this->item->setActiveIfRequest($request);
+        $this->item->active_is_request = $request;
+        
+        return $this;
+    }
+    
+    /**
+     * @param $routes
+     * @return $this
+     */
+    public function notActiveIsRoute($routes)
+    {
+        $routes = is_array($routes) ? $routes : func_get_args();
+        
+        $this->item->not_active_is_route = $routes;
+        
+        return $this;
+    }
+    
+    /**
+     * @param $request
+     * @return $this
+     */
+    public function notActiveIsRequest($request)
+    {
+        $request = is_array($request) ? $request : func_get_args();
+        
+        $this->item->not_active_is_request = $request;
         
         return $this;
     }

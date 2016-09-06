@@ -31,7 +31,7 @@ class Active
     public function detect($items, $active = [])
     {
         foreach ($items as $key => $item) {
-            if (!$item->itChild()) {
+            if (!$item->it_child) {
                 $active = [];
             }
             
@@ -42,7 +42,7 @@ class Active
             
             if ($item->hasChildren()) {
                 $active[$key] = $key;
-                $this->detect($item->getChildren(), $active);
+                $this->detect($item->children, $active);
             }
         }
     }
@@ -62,7 +62,7 @@ class Active
             $item->setActive(true);
 
             if (!empty($parent)) {
-                $this->detectParent($item->getChildren(), $parent);
+                $this->detectParent($item->children, $parent);
             }
         }
     }
@@ -74,34 +74,16 @@ class Active
      */
     protected function isActive(Item $item)
     {
-        if ($this->isRouteActive($item)) {
-            return true;
-        }
-        
-        if ($this->isRequestActive($item)) {
-            return true;
-        }
-        
-        if (is_null($item->active_if_route) && is_null($item->active_if_request)) {
+        if ($this->notIsRouteActive($item) || $this->notIsRequestActive($item)) {
             return false;
         }
         
-        return false;
-    }
-
-    /**
-     * @param Item $item
-     * 
-     * @return bool
-     */
-    protected function isRouteActive(Item $item)
-    {
-        if ($this->route->getName() === $item->getRoute()) {
+        if ($this->isRouteActive($item) || $this->isRequestActive($item)) {
             return true;
         }
         
-        if (is_array($item->active_if_route) && in_array($item->getRoute(), $item->active_if_route)) {
-            return true;
+        if (is_null($item->active_is_route) && is_null($item->active_is_request)) {
+            return false;
         }
         
         return false;
@@ -112,13 +94,80 @@ class Active
      * 
      * @return bool
      */
-    protected function isRequestActive(Item $item)
+    protected function notIsRouteActive(Item $item)
     {
-        if (! is_array($item->active_if_request)) {
+        if (is_null($item->not_active_is_route)) {
             return false;
         }
         
-        foreach ($item->active_if_request as $pattern) {
+        return $this->routeInArray($item->route, $item->not_active_is_route) ? false : true;
+    }
+
+    /**
+     * @param Item $item
+     * 
+     * @return bool
+     */
+    protected function isRouteActive(Item $item)
+    {
+        if ($this->route->getName() === $item->route) {
+            return true;
+        }
+        
+        if ($this->routeInArray($item->route, $item->active_is_route)) {
+            return true;
+        }
+        
+        return false;
+    }
+    
+    /**
+     * @param $item_route
+     * @param $routes
+     * 
+     * @return bool
+     */
+    protected function routeInArray($item_route, $routes)
+    {
+        return (is_array($routes) && in_array($item_route, $routes));
+    }
+    
+    /**
+     * @param Item $item
+     * 
+     * @return bool
+     */
+    protected function notIsRequestActive(Item $item)
+    {
+        if (is_null($item->not_active_is_request)) {
+            return false;
+        }
+        
+        return $this->requestIs($item->not_active_is_request) ? false : true;
+    }
+
+    /**
+     * @param Item $item
+     * 
+     * @return bool
+     */
+    protected function isRequestActive(Item $item)
+    {
+        if (! is_array($item->active_is_request)) {
+            return false;
+        }
+        
+        return $this->requestIs($item->active_is_request);
+    }
+    
+    /**
+     * @param $requests
+     * 
+     * @return bool
+     */
+    protected function requestIs($requests)
+    {
+        foreach ($requests as $pattern) {
             if (Str::is($pattern, urldecode($this->request->path()))) {
                 return true;
             }

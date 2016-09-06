@@ -11,6 +11,7 @@ abstract class Menu implements MenuInterface
 {
     protected $items = [];
     
+    /** @var Model */
     protected $model;
     
     /**
@@ -99,7 +100,7 @@ abstract class Menu implements MenuInterface
     /**
      * @return bool
      */
-    protected function hasModel()
+    public function hasModel()
     {
         return $this->model instanceof Model;
     }
