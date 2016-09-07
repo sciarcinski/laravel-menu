@@ -114,7 +114,7 @@ class Menu
         
         foreach ($this->service->get() as $item) {
             $html .= '<li class="'.$item->getClass().'">';
-            $html .= '<a href="'.$item->getUrl().'">'.$item->getTitle().'</a>';
+            $html .= '<a href="'.$item->getUrl().'">'.$item->title.'</a>';
             $html .= '</li>';
         }
         
