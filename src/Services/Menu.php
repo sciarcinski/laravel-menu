@@ -2,6 +2,7 @@
 
 namespace Sciarcinski\LaravelMenu\Services;
 
+use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
 use Sciarcinski\LaravelMenu\Item;
 use Sciarcinski\LaravelMenu\MenuInterface;
@@ -14,12 +15,17 @@ abstract class Menu implements MenuInterface
     /** @var Model */
     protected $model;
     
+    /** @var Request */
+    protected $request;
+
     /**
      * @param null|Model $model
+     * @param Request $request
      */
-    public function __construct($model)
+    public function __construct($model, Request $request)
     {
         $this->model = $model;
+        $this->request = $request;
     }
 
     /**

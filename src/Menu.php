@@ -2,6 +2,7 @@
 
 namespace Sciarcinski\LaravelMenu;
 
+use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Application;
 use Sciarcinski\LaravelMenu\Services\Menu as MenuService;
@@ -14,6 +15,9 @@ class Menu
     /** @var Application */
     protected $app;
     
+    /** @var Request */
+    protected $request;
+
     /** @var Model */
     protected $model;
 
@@ -21,10 +25,12 @@ class Menu
 
     /**
      * @param Application $app
+     * @param Request $request
      */
-    public function __construct($app)
+    public function __construct(Application $app, Request $request)
     {
         $this->app = $app;
+        $this->request = $request;
     }
     
     /**
@@ -140,7 +146,7 @@ class Menu
      */
     protected function getMenu($menu)
     {
-        $this->service = new $menu($this->getModelAndForget());
+        $this->service = new $menu($this->getModelAndForget(), $this->request);
         $this->service->items();
         
         return $this->service;
