@@ -92,7 +92,7 @@ class Item
     
     /**
      * Remove class
-     * 
+     *
      * @param $class
      */
     public function removeClass($class)
@@ -180,7 +180,7 @@ class Item
     
     /**
      * Set active
-     * 
+     *
      * @param $bool
      */
     public function setActive(bool $bool)
@@ -249,7 +249,7 @@ class Item
     
     /**
      * Has children
-     * 
+     *
      * @return bool
      */
     public function hasChildren()
@@ -259,7 +259,7 @@ class Item
     
     /**
      * Has item active
-     * 
+     *
      * @return bool
      */
     public function hasActive()
@@ -280,7 +280,7 @@ class Item
     
     /**
      * @param $property
-     * 
+     *
      * @return mixed
      */
     public function __get($property)

@@ -43,7 +43,7 @@ class Menu
     
     /**
      * @param Model $model
-     * 
+     *
      * @return $this
      */
     public function model(Model $model)
@@ -55,9 +55,9 @@ class Menu
 
     /**
      * Get
-     * 
+     *
      * @param $menu
-     * 
+     *
      * @return $this
      */
     public function get($menu)
@@ -111,7 +111,7 @@ class Menu
     
     /**
      * Get nav tabs
-     * 
+     *
      * @return string
      */
     public function navTabs()
@@ -130,7 +130,7 @@ class Menu
     /**
      * @param $parent_url
      * @param $parent_title
-     * 
+     *
      * @return string
      */
     public function breadcrumb($parent_url = null, $parent_title = null)

@@ -24,7 +24,7 @@ class Active
 
     /**
      * Detect active
-     * 
+     *
      * @param $items
      * @param $active
      */
@@ -49,7 +49,7 @@ class Active
     
     /**
      * Detect active parent
-     * 
+     *
      * @param $items
      * @param $parent
      */
@@ -69,7 +69,7 @@ class Active
     
     /**
      * @param Item $item
-     * 
+     *
      * @return bool
      */
     protected function isActive(Item $item)
@@ -91,7 +91,7 @@ class Active
     
     /**
      * @param Item $item
-     * 
+     *
      * @return bool
      */
     protected function notIsRouteActive(Item $item)
@@ -100,12 +100,12 @@ class Active
             return false;
         }
         
-        return $this->routeInArray($item->route, $item->not_active_is_route) ? false : true;
+        return $this->routeInArray($this->route->getName(), $item->not_active_is_route);
     }
 
     /**
      * @param Item $item
-     * 
+     *
      * @return bool
      */
     protected function isRouteActive(Item $item)
@@ -124,7 +124,7 @@ class Active
     /**
      * @param $item_route
      * @param $routes
-     * 
+     *
      * @return bool
      */
     protected function routeInArray($item_route, $routes)
@@ -134,7 +134,7 @@ class Active
     
     /**
      * @param Item $item
-     * 
+     *
      * @return bool
      */
     protected function notIsRequestActive(Item $item)
@@ -148,7 +148,7 @@ class Active
 
     /**
      * @param Item $item
-     * 
+     *
      * @return bool
      */
     protected function isRequestActive(Item $item)
@@ -162,7 +162,7 @@ class Active
     
     /**
      * @param $requests
-     * 
+     *
      * @return bool
      */
     protected function requestIs($requests)

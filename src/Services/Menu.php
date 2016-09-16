@@ -30,7 +30,7 @@ abstract class Menu implements MenuInterface
 
     /**
      * Get items
-     * 
+     *
      * @return array
      */
     public function get()
@@ -40,7 +40,7 @@ abstract class Menu implements MenuInterface
     
     /**
      * Add item
-     * 
+     *
      * @param $title
      * @param $route
      * @param $icon_left
@@ -76,7 +76,7 @@ abstract class Menu implements MenuInterface
      */
     public function iconParentRight()
     {
-        return 'fa fa-angle-left';
+        return 'fa-angle-left';
     }
     
     /**

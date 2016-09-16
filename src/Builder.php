@@ -44,7 +44,7 @@ class Builder
     /**
      * @param $route
      * @param $parameters
-     * 
+     *
      * @return $this
      */
     public function route($route, $parameters = [])
@@ -57,7 +57,7 @@ class Builder
     /**
      * @param $action
      * @param $parameters
-     * 
+     *
      * @return $this
      */
     public function action($action, $parameters = [])
@@ -89,7 +89,7 @@ class Builder
     
     /**
      * Remove class
-     * 
+     *
      * @param $class
      */
     public function classRemove($class)

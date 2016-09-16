@@ -68,7 +68,7 @@ class Breadcrumb
 
     /**
      * Add item the breadcrumb
-     * 
+     *
      * @param Item $item
      */
     protected function add($item)
@@ -83,7 +83,7 @@ class Breadcrumb
     
     /**
      * Find active item in children
-     * 
+     *
      * @param Item $item
      */
     protected function children($item)
