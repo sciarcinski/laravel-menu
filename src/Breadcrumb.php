@@ -28,7 +28,6 @@ class Breadcrumb
     {
         if (is_array($menu_items)) {
             $item = array_first($menu_items, function ($key, $item) {
-                
                 if ($key instanceof Item) {
                     $item = $key;
                 }
