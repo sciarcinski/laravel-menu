@@ -114,7 +114,7 @@ class Active
             return true;
         }
         
-        if ($this->routeInArray($item->route, $item->active_is_route)) {
+        if ($this->routeInArray($this->route->getName(), $item->active_is_route)) {
             return true;
         }
         
