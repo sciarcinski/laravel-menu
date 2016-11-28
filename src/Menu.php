@@ -90,7 +90,7 @@ class Menu
             $html .= '<a href="'.$item->getUrl().'">'.$item->getIconLeft().'<span>'.$item->title.'</span>'.$item->getIconRight().'</a>';
             
             if ($item->hasChildren()) {
-                $html .= '<ul class="treeview-menu">';
+                $html .= '<ul class="'.$item->service->tree_class.'">';
                 $html .= $this->render($item->children);
                 $html .= '</ul>';
             }

@@ -36,7 +36,7 @@ class Builder
      */
     public function title($title)
     {
-        $this->item->setTitle($title);
+        $this->item->title = $title;
 
         return $this;
     }
@@ -69,6 +69,7 @@ class Builder
     
     /**
      * @param $url
+     *
      * @return $this
      */
     public function url($url)
@@ -78,6 +79,7 @@ class Builder
 
     /**
      * @param $class
+     *
      * @return $this
      */
     public function classAdd($class)
@@ -101,6 +103,7 @@ class Builder
 
     /**
      * @param $icon
+     *
      * @return $this
      */
     public function iconLeft($icon)
@@ -112,6 +115,7 @@ class Builder
     
     /**
      * @param $icon
+     *
      * @return $this
      */
     public function iconRight($icon)
@@ -123,6 +127,7 @@ class Builder
     
     /**
      * @param $routes
+     *
      * @return $this
      */
     public function activeIsRoute($routes)
@@ -136,6 +141,7 @@ class Builder
     
     /**
      * @param $request
+     *
      * @return $this
      */
     public function activeIsRequest($request)
@@ -149,6 +155,7 @@ class Builder
     
     /**
      * @param $routes
+     *
      * @return $this
      */
     public function notActiveIsRoute($routes)
@@ -162,6 +169,7 @@ class Builder
     
     /**
      * @param $request
+     *
      * @return $this
      */
     public function notActiveIsRequest($request)

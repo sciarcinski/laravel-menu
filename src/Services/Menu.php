@@ -17,6 +17,16 @@ abstract class Menu implements MenuInterface
     
     /** @var Request */
     protected $request;
+    
+    public $default_url = 'javascript:;';
+    
+    public $icon_parent_left = 'fa-angle-double-right';
+    
+    public $icon_parent_right = 'fa-angle-left';
+    
+    public $icon_child_left = '';
+
+    public $tree_class = 'nav-second-level nav';
 
     /**
      * @param null|Model $model
@@ -56,51 +66,23 @@ abstract class Menu implements MenuInterface
     }
     
     /**
+     * @param $icon
+     *
      * @return string
      */
-    public function defaultUrl()
+    public function getIconLeft($icon)
     {
-        return 'javascript:;';
-    }
-    
-    /**
-     * @return string
-     */
-    public function iconParentLeft()
-    {
-        return 'fa-angle-double-right';
-    }
-    
-    /**
-     * @return string
-     */
-    public function iconParentRight()
-    {
-        return 'fa-angle-left';
-    }
-    
-    /**
-     * @return string
-     */
-    public function iconChildLeft()
-    {
-        return 'fa-circle-o';
+        return '<i class="fa '.$icon.'"></i>';
     }
     
     /**
      * @param $icon
-     * @param $type
+     *
      * @return string
      */
-    public function getIcon($icon, $type)
+    public function getIconRight($icon)
     {
-        switch ($type) {
-            case 'left':
-                return '<i class="fa '.$icon.'"></i>';
-            
-            case 'right':
-                return '<span class="pull-right-container"><i class="fa '.$icon.' pull-right"></i></span>';
-        }
+        return '<span class="pull-right-container"><i class="fa '.$icon.' pull-right"></i></span>';
     }
     
     /**

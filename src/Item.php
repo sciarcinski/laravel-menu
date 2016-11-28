@@ -40,7 +40,11 @@ class Item
     protected $not_active_is_route;
     
     protected $not_active_is_request;
-
+    
+    /**
+     * @param Service $service
+     * @param bool $it_child
+     */
     public function __construct(Service $service, $it_child = false)
     {
         $this->service = $service;
@@ -64,9 +68,10 @@ class Item
      */
     public function add($title, $route = null, $icon_left = null, $class = null)
     {
-        $this->setTitle($title);
+        $this->title = $title;
+        $this->icon_left = $icon_left;
+        
         $this->setRoute($route);
-        $this->setIconLeft($icon_left);
         $this->addClass($class);
         
         return new Builder($this);
@@ -103,14 +108,6 @@ class Item
     }
     
     /**
-     * @param $title
-     */
-    public function setTitle($title)
-    {
-        $this->title = $title;
-    }
-    
-    /**
      * @param $route
      * @param $parameters
      */
@@ -120,7 +117,7 @@ class Item
         $this->parameters = $parameters;
         
         if (!is_null($this->route) && !empty($this->route)) {
-            $this->setUrl(route($this->route, $parameters));
+            $this->url = route($this->route, $parameters);
         }
     }
     
@@ -134,48 +131,8 @@ class Item
         $this->parameters = $parameters;
         
         if (!is_null($this->action) && !empty($this->action)) {
-            $this->setUrl(action($this->action, $parameters));
+            $this->url = action($this->action, $parameters);
         }
-    }
-    
-    /**
-     * @param $url
-     */
-    public function setUrl($url)
-    {
-        $this->url = $url;
-    }
-    
-    /**
-     * @param array $routes
-     */
-    public function setActiveIfRoute(array $routes)
-    {
-        $this->active_is_route = $routes;
-    }
-    
-    /**
-     * @param array $request
-     */
-    public function setActiveIfRequest(array $request)
-    {
-        $this->active_is_request = $request;
-    }
-
-    /**
-     * @param $icon
-     */
-    public function setIconLeft($icon)
-    {
-        $this->icon_left = $icon;
-    }
-    
-    /**
-     * @param $icon
-     */
-    public function setIconRight($icon)
-    {
-        $this->icon_right = $icon;
     }
     
     /**
@@ -198,8 +155,8 @@ class Item
     public function getIconLeft()
     {
         $default = $this->it_child ?
-                $this->service->iconChildLeft() :
-                $this->service->iconParentLeft();
+                $this->service->icon_child_left :
+                $this->service->icon_parent_left;
         
         return $this->getIcon($this->icon_left, $default, 'left');
     }
@@ -210,7 +167,7 @@ class Item
     public function getIconRight()
     {
         if ($this->hasChildren()) {
-            return $this->getIcon($this->icon_right, $this->service->iconParentRight(), 'right');
+            return $this->getIcon($this->icon_right, $this->service->icon_parent_right, 'right');
         }
     }
     
@@ -218,16 +175,19 @@ class Item
      * @param $icon
      * @param $default
      * @param $type
+     *
      * @return string|null
      */
     protected function getIcon($icon, $default, $type)
     {
+        $method = 'getIcon' . ucfirst($type);
+        
         if (!is_null($icon) && !empty($icon)) {
-            return $this->service->getIcon($icon, $type);
+            return $this->service->$method($icon, $type);
         }
         
         if (!is_null($default) && !empty($default)) {
-            return $this->service->getIcon($default, $type);
+            return $this->service->$method($default, $type);
         }
     }
 
@@ -244,7 +204,7 @@ class Item
      */
     public function getUrl()
     {
-        return (is_null($this->url) || empty($this->url)) ? $this->service->defaultUrl() : $this->url;
+        return (is_null($this->url) || empty($this->url)) ? $this->service->default_url : $this->url;
     }
     
     /**
