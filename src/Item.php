@@ -27,6 +27,8 @@ class Item
     
     protected $class = [];
     
+    protected $attributes = [];
+
     protected $children;
     
     protected $active = false;
@@ -84,11 +86,19 @@ class Item
     {
         $this->children[] = $item;
     }
+    
+    /**
+     * @param array $attributes
+     */
+    public function addAttributes(array $attributes = [])
+    {
+        $this->attributes = array_merge($this->attributes, $attributes);
+    }
 
     /**
      * @param $class
      */
-    protected function addClass($class)
+    public function addClass($class)
     {
         if (!is_null($class) && !in_array($class, $this->class)) {
             $this->class[] = $class;
@@ -207,6 +217,20 @@ class Item
         return (is_null($this->url) || empty($this->url)) ? $this->service->default_url : $this->url;
     }
     
+    /**
+     * @return string
+     */
+    public function getAttributes()
+    {
+        $output = '';
+        
+        foreach ($this->attributes as $key => $value) {
+            $output .= $key.'="'.$value.'" ';
+        }
+        
+        return $output;
+    }
+
     /**
      * Has children
      *

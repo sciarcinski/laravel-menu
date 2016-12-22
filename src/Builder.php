@@ -74,7 +74,21 @@ class Builder
      */
     public function url($url)
     {
-        $this->item->setUrl($url);
+        $this->item->url = $url;
+        
+        return $this;
+    }
+    
+    /**
+     * @param array $attributes
+     *
+     * @return $this
+     */
+    public function attributes(array $attributes = [])
+    {
+        $this->item->addAttributes($attributes);
+        
+        return $this;
     }
 
     /**

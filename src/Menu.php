@@ -87,7 +87,7 @@ class Menu
         
         foreach ($items as $item) {
             $html .= '<li class="'.$item->getClass().'">';
-            $html .= '<a href="'.$item->getUrl().'">'.$item->getIconLeft().'<span>'.$item->title.'</span>'.$item->getIconRight().'</a>';
+            $html .= '<a href="'.$item->getUrl().'" '.$item->getAttributes().'>'.$item->getIconLeft().'<span>'.$item->title.'</span>'.$item->getIconRight().'</a>';
             
             if ($item->hasChildren()) {
                 $html .= '<ul class="'.$item->service->tree_class.'">';
