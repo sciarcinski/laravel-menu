@@ -82,10 +82,6 @@ class Active
             return true;
         }
         
-        if (is_null($item->active_is_route) && is_null($item->active_is_request)) {
-            return false;
-        }
-        
         return false;
     }
     
@@ -110,11 +106,10 @@ class Active
      */
     protected function isRouteActive(Item $item)
     {
-        if ($this->route->getName() === $item->route) {
-            return true;
-        }
-        
-        if ($this->routeInArray($item->route, $item->active_is_route)) {
+        if (
+            $this->route->getName() === $item->route ||
+            $this->routeInArray($this->route->getName(), $item->active_is_route)
+        ) {
             return true;
         }
         
