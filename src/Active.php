@@ -3,7 +3,6 @@
 namespace Sciarcinski\LaravelMenu;
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Str;
 use Sciarcinski\LaravelMenu\Item;
 
 class Active
@@ -138,7 +137,7 @@ class Active
             return false;
         }
         
-        return $this->requestIs($item->not_active_is_request) ? false : true;
+        return $this->requestIs($item->not_active_is_request);
     }
 
     /**
@@ -163,7 +162,7 @@ class Active
     protected function requestIs($requests)
     {
         foreach ($requests as $pattern) {
-            if (Str::is($pattern, urldecode($this->request->path()))) {
+            if ($this->request->is($pattern)) {
                 return true;
             }
         }
