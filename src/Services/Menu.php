@@ -3,7 +3,6 @@
 namespace Sciarcinski\LaravelMenu\Services;
 
 use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent\Model;
 use Sciarcinski\LaravelMenu\Item;
 use Sciarcinski\LaravelMenu\MenuInterface;
 use Sciarcinski\LaravelMenu\Builder;
@@ -12,7 +11,7 @@ abstract class Menu implements MenuInterface
 {
     protected $items = [];
     
-    /** @var Model */
+    /** @var mixed */
     protected $model;
     
     /** @var Request */
@@ -29,7 +28,7 @@ abstract class Menu implements MenuInterface
     public $tree_class = 'nav-second-level nav';
 
     /**
-     * @param null|Model $model
+     * @param mixed $model
      * @param Request $request
      */
     public function __construct($model, Request $request)
@@ -90,6 +89,6 @@ abstract class Menu implements MenuInterface
      */
     public function hasModel()
     {
-        return $this->model instanceof Model;
+        return !is_null($this->model);
     }
 }

@@ -18,7 +18,7 @@ class Menu
     /** @var Request */
     protected $request;
 
-    /** @var Model */
+    /** @var mixed */
     protected $model;
 
     protected $instance = [];
@@ -42,11 +42,11 @@ class Menu
     }
     
     /**
-     * @param Model $model
+     * @param mixed $model
      *
      * @return $this
      */
-    public function model(Model $model)
+    public function model($model)
     {
         $this->model = $model;
         
@@ -180,7 +180,7 @@ class Menu
     }
     
     /**
-     * @return Model
+     * @return mixed
      */
     protected function getModelAndForget()
     {
