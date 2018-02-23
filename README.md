@@ -1,4 +1,4 @@
-Laravel 5.2|5.3 Menu
+Laravel 5.* Menu
 ==
 
 ## Installation
