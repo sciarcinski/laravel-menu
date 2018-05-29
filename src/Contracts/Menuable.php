@@ -36,6 +36,16 @@ interface Menuable
     public function activeLinkClassName();
 
     /**
+     * @return array
+     */
+    public function itemAttributes();
+
+    /**
+     * @return array
+     */
+    public function linkAttributes();
+
+    /**
      * @param array|null $items
      * @return string
      */
