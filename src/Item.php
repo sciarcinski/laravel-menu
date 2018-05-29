@@ -2,57 +2,72 @@
 
 namespace Sciarcinski\LaravelMenu;
 
-use Sciarcinski\LaravelMenu\Item;
 use Sciarcinski\LaravelMenu\Services\Menu as Service;
-use Sciarcinski\LaravelMenu\Builder;
 
 class Item
 {
     /** @var Service */
     protected $service;
 
-    protected $title;
-    
-    protected $route;
-    
-    protected $action;
-    
-    protected $parameters;
-    
-    protected $url;
-    
-    protected $icon_left;
-    
-    protected $icon_right;
-    
-    protected $class = [];
-    
-    protected $attributes = [];
+    /** @var Item|null */
+    protected $parent;
 
-    protected $children;
-    
+    /** @var string */
+    protected $title;
+
+    /** @var string */
+    protected $route;
+
+    /** @var string */
+    protected $action;
+
+    /** @var array */
+    protected $parameters = [];
+
+    /** @var string */
+    protected $url;
+
+    /** @var array */
+    protected $children = [];
+
+    /** @var array */
+    protected $itemAttributes = [];
+
+    /** @var array */
+    protected $linkAttributes = [];
+
+    /** @var string */
+    protected $before;
+
+    /** @var string */
+    protected $after;
+
+    /** @var bool */
     protected $active = false;
-    
-    protected $it_child;
-    
-    protected $active_is_route;
-    
-    protected $active_is_request;
-    
-    protected $not_active_is_route;
-    
-    protected $not_active_is_request;
-    
+
+    /** @var array */
+    protected $activateRoutes = [];
+
+    /** @var array */
+    protected $activatePaths = [];
+
+    /** @var array */
+    protected $notActivateRoutes = [];
+
+    /** @var array */
+    protected $notActivatePaths = [];
+
     /**
      * @param Service $service
-     * @param bool $it_child
+     * @param Item|null $parent
+     * @param bool child
      */
-    public function __construct(Service $service, $it_child = false)
+    public function __construct(Service $service, $parent = null)
     {
         $this->service = $service;
-        $this->it_child = $it_child;
+        $this->parent = $parent;
     }
-    
+
     /**
      * @return Service
      */
@@ -62,215 +77,370 @@ class Item
     }
 
     /**
-     * @param $title
-     * @param $route
-     * @param $icon_left
-     * @param $class
-     * @return Builder
+     * @return $this|null
      */
-    public function add($title, $route = null, $icon_left = null, $class = null)
+    public function parent()
     {
-        $this->title = $title;
-        $this->icon_left = $icon_left;
-        
-        $this->setRoute($route);
-        $this->addClass($class);
-        
-        return new Builder($this);
+        return $this->parent;
     }
-    
+
     /**
-     * @param Item $item
+     * @return string
      */
-    public function addChild(Item $item)
+    public function getRoute()
     {
-        $this->children[] = $item;
+        return $this->route;
     }
-    
+
+    /**
+     * @return array
+     */
+    public function getChildren()
+    {
+        return $this->children;
+    }
+
+    /**
+     * @return array
+     */
+    public function getActivateRoutes()
+    {
+        return $this->activateRoutes;
+    }
+
+    /**
+     * @return array
+     */
+    public function getActivatePaths()
+    {
+        return $this->activatePaths;
+    }
+
+    /**
+     * @return array
+     */
+    public function getNotActivateRoutes()
+    {
+        return $this->notActivateRoutes;
+    }
+
+    /**
+     * @return array
+     */
+    public function getNotActivatePaths()
+    {
+        return $this->notActivatePaths;
+    }
+
+    /**
+     * @return string
+     */
+    public function getItemAttributes()
+    {
+        return $this->getAttributes($this->itemAttributes);
+    }
+
+    /**
+     * @return string
+     */
+    public function getLinkAttributes()
+    {
+        return $this->getAttributes($this->linkAttributes);
+    }
+
     /**
      * @param array $attributes
+     * @return string
      */
-    public function addAttributes(array $attributes = [])
+    protected function getAttributes(array $attributes)
     {
-        $this->attributes = array_merge($this->attributes, $attributes);
+        $html = '';
+
+        foreach ($attributes as $key => $value) {
+            $html .= $key.'="'.$value.'" ';
+        }
+
+        return $html;
     }
 
-    /**
-     * @param $class
-     */
-    public function addClass($class)
-    {
-        if (!is_null($class) && !in_array($class, $this->class)) {
-            $this->class[] = $class;
-        }
-    }
-    
-    /**
-     * Remove class
-     *
-     * @param $class
-     */
-    public function removeClass($class)
-    {
-        if ($key = array_search($class, $this->class) !== false) {
-            unset($this->class[$key]);
-        }
-    }
-    
-    /**
-     * @param $route
-     * @param $parameters
-     */
-    public function setRoute($route, $parameters = [])
-    {
-        $this->route = $route;
-        $this->parameters = $parameters;
-        
-        if (!is_null($this->route) && !empty($this->route)) {
-            $this->url = route($this->route, $parameters);
-        }
-    }
-    
-    /**
-     * @param $action
-     * @param $parameters
-     */
-    public function setAction($action, $parameters = [])
-    {
-        $this->action = $action;
-        $this->parameters = $parameters;
-        
-        if (!is_null($this->action) && !empty($this->action)) {
-            $this->url = action($this->action, $parameters);
-        }
-    }
-    
-    /**
-     * Set active
-     *
-     * @param $bool
-     */
-    public function setActive(bool $bool)
-    {
-        $this->active = $bool;
-        
-        $this->active ?
-            $this->addClass('active') :
-            $this->removeClass('active');
-    }
-    
-    /**
-     * @return string
-     */
-    public function getIconLeft()
-    {
-        $default = $this->it_child ?
-                $this->service->icon_child_left :
-                $this->service->icon_parent_left;
-        
-        return $this->getIcon($this->icon_left, $default, 'left');
-    }
-    
-    /**
-     * @return string
-     */
-    public function getIconRight()
-    {
-        if ($this->hasChildren()) {
-            return $this->getIcon($this->icon_right, $this->service->icon_parent_right, 'right');
-        }
-    }
-    
-    /**
-     * @param $icon
-     * @param $default
-     * @param $type
-     *
-     * @return string|null
-     */
-    protected function getIcon($icon, $default, $type)
-    {
-        $method = 'getIcon' . ucfirst($type);
-        
-        if (!is_null($icon) && !empty($icon)) {
-            return $this->service->$method($icon, $type);
-        }
-        
-        if (!is_null($default) && !empty($default)) {
-            return $this->service->$method($default, $type);
-        }
-    }
-
-    /**
-     * @return string
-     */
-    public function getClass()
-    {
-        return implode(' ', array_filter($this->class));
-    }
-    
     /**
      * @return string
      */
     public function getUrl()
     {
-        return (is_null($this->url) || empty($this->url)) ? $this->service->default_url : $this->url;
-    }
-    
-    /**
-     * @return string
-     */
-    public function getAttributes()
-    {
-        $output = '';
-        
-        foreach ($this->attributes as $key => $value) {
-            $output .= $key.'="'.$value.'" ';
-        }
-        
-        return $output;
+        return (is_null($this->url) || empty($this->url)) ? $this->service->defaultUrl() : $this->url;
     }
 
     /**
-     * Has children
-     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBefore()
+    {
+        return $this->before;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAfter()
+    {
+        return $this->after;
+    }
+
+    /**
+     * @param string $title
+     * @return $this
+     */
+    public function add($title)
+    {
+        $this->children[] = $item = new static($this->service, $this);
+        $item->title($title);
+
+        return $item;
+    }
+
+    /**
+     * @return $this
+     */
+    public function activate()
+    {
+        $this->active = true;
+        $this->itemClass($this->service()->activeItemClassName());
+        $this->itemClass($this->service()->activeLinkClassName());
+
+        if ($this->parent()) {
+            $this->parent()->activate();
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string $title
+     * @return $this
+     */
+    public function title($title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * @param string $url
+     * @return $this
+     */
+    public function url($url)
+    {
+        $this->url = $url;
+
+        return $this;
+    }
+
+    /**
+     * @param string $route
+     * @param array $parameters
+     * @return $this
+     */
+    public function route($route, array $parameters = [])
+    {
+        $this->route = $route;
+        $this->parameters = $parameters;
+        $this->url(route($this->route, $parameters));
+
+        return $this;
+    }
+
+    /**
+     * @param string $action
+     * @param array $parameters
+     * @return $this
+     */
+    public function action($action, array $parameters = [])
+    {
+        $this->action = $action;
+        $this->parameters = $parameters;
+        $this->url(action($this->action, $parameters));
+
+        return $this;
+    }
+
+    /**
+     * @param array $attributes
+     * @return $this
+     */
+    public function itemAttributes(array $attributes)
+    {
+        $this->itemAttributes = array_merge($this->itemAttributes, $attributes);
+        
+        return $this;
+    }
+
+    /**
+     * @param array $attributes
+     * @return $this
+     */
+    public function linkAttributes(array $attributes)
+    {
+        $this->linkAttributes = array_merge($this->linkAttributes, $attributes);
+
+        return $this;
+    }
+
+    /**
+     * @param string $id
+     * @return $this
+     */
+    public function itemId($id)
+    {
+        $this->itemAttributes(['id' => $id]);
+
+        return $this;
+    }
+
+    /**
+     * @param string $class
+     * @return $this
+     */
+    public function itemClass($class)
+    {
+        if (array_key_exists('class', $this->itemAttributes)) {
+            $class .= ' ' . $this->itemAttributes['class'];
+        }
+
+        $this->itemAttributes(['class' => $class]);
+
+        return $this;
+    }
+
+    /**
+     * @param string $class
+     * @return $this
+     */
+    public function linkClass($class)
+    {
+        if (array_key_exists('class', $this->linkAttributes)) {
+            $class .= ' ' . $this->linkAttributes['class'];
+        }
+
+        $this->linkAttributes(['class' => $class]);
+
+        return $this;
+    }
+
+    /**
+     * @param string $before
+     * @return $this
+     */
+    public function before($before)
+    {
+        $this->before = $before;
+
+        return $this;
+    }
+
+    /**
+     * @param string $after
+     * @return $this
+     */
+    public function after($after)
+    {
+        $this->after = $after;
+
+        return $this;
+    }
+
+
+    /**
+     * @param mixed $routes
+     * @return $this
+     */
+    public function activateForRoutes($routes)
+    {
+        $items = is_array($routes) ? $routes : func_get_args();
+
+        $this->activateRoutes = array_merge($this->activateRoutes, $items);
+        $this->removeItems($items, $this->notActivateRoutes);
+
+        return $this;
+    }
+
+    /**
+     * @param mixed $paths
+     * @return $this
+     */
+    public function activateForPaths($paths)
+    {
+        $items = is_array($paths) ? $paths : func_get_args();
+
+        $this->activatePaths = array_merge($this->activatePaths, $items);
+        $this->removeItems($items, $this->notActivatePaths);
+
+        return $this;
+    }
+
+    /**
+     * @param mixed $routes
+     * @return $this
+     */
+    public function notActivateForRoutes($routes)
+    {
+        $items = is_array($routes) ? $routes : func_get_args();
+
+        $this->notActivateRoutes = array_merge($this->notActivateRoutes, $items);
+        $this->removeItems($items, $this->activateRoutes);
+
+        return $this;
+    }
+
+    /**
+     * @param mixed $paths
+     * @return $this
+     */
+    public function notActivateForPaths($paths)
+    {
+        $items = is_array($paths) ? $paths : func_get_args();
+
+        $this->notActivatePaths = array_merge($this->notActivatePaths, $items);
+        $this->removeItems($items, $this->activatePaths);
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isNotActivateEmpty()
+    {
+        return (empty($this->notActivateRoutes) && empty($this->notActivatePaths));
+    }
+
+    /**
      * @return bool
      */
     public function hasChildren()
     {
-        return (!is_null($this->children) && !empty($this->children));
+        return !empty($this->children);
     }
-    
+
     /**
-     * Has item active
-     *
-     * @return bool
+     * @param array $remove
+     * @param array $items
      */
-    public function hasActive()
+    protected function removeItems(array $remove, array &$items)
     {
-        return $this->active;
-    }
-    
-    /**
-     * @param $property
-     * @param $value
-     */
-    public function __set($property, $value)
-    {
-        if (property_exists($this, $property)) {
-            $this->$property = $value;
-        }
-    }
-    
-    /**
-     * @param $property
-     *
-     * @return mixed
-     */
-    public function __get($property)
-    {
-        if (property_exists($this, $property)) {
-            return $this->$property;
+        foreach ($items as $key => $item) {
+            if (in_array($item, $remove)) {
+                unset($items[$key]);
+            }
         }
     }
 }

@@ -2,48 +2,34 @@
 
 namespace Sciarcinski\LaravelMenu;
 
+use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Application;
-use Sciarcinski\LaravelMenu\Services\Menu as MenuService;
+use Sciarcinski\LaravelMenu\Contracts\Menuable as MenuableContract;
 
 class Menu
 {
-    /** @var MenuService */
-    protected $service;
-    
-    /** @var Application */
-    protected $app;
-    
     /** @var Request */
     protected $request;
 
+    /** @var MenuableContract */
+    protected $current;
+    
     /** @var mixed */
     protected $model;
 
+    /** @var array */
     protected $instance = [];
 
     /**
-     * @param Application $app
      * @param Request $request
      */
-    public function __construct(Application $app, Request $request)
+    public function __construct(Request $request)
     {
-        $this->app = $app;
         $this->request = $request;
     }
     
     /**
-     * @param $menu
-     */
-    protected function getInstance($menu)
-    {
-        $this->service = $this->instance[$menu];
-    }
-    
-    /**
      * @param mixed $model
-     *
      * @return $this
      */
     public function model($model)
@@ -54,131 +40,24 @@ class Menu
     }
 
     /**
-     * Get
-     *
-     * @param $menu
-     *
-     * @return $this
+     * @param $name
+     * @return MenuableContract
      */
-    public function get($menu)
+    public function get($name)
     {
-        $menu = '\\App\\Menus\\'.studly_case($menu);
+        $menu = '\\App\\Menus\\'.studly_case($name);
         
         if ($this->hasInstance($menu)) {
-            $this->getInstance($menu);
+            $this->setInstance(
+                $this->getInstance($menu)
+            );
         } else {
-            $this->getMenu($menu);
-            $this->detectActive();
-            $this->pullInstance($menu);
+            $this->loadInstance($menu, $this->getModelAndForget());
         }
         
-        return $this;
-    }
-    
-    /**
-     * @param $items
-     * @return string
-     */
-    public function render($items = null)
-    {
-        $items = is_null($items) ? $this->service->get() : $items;
-        
-        $html = '';
-        
-        foreach ($items as $item) {
-            $html .= '<li class="'.$item->getClass().'">';
-            $html .= '<a href="'.$item->getUrl().'" '.$item->getAttributes().'>'.$item->getIconLeft().'<span>'.$item->title.'</span>'.$item->getIconRight().'</a>';
-            
-            if ($item->hasChildren()) {
-                $html .= '<ul class="'.$item->service->tree_class.'">';
-                $html .= $this->render($item->children);
-                $html .= '</ul>';
-            }
-            
-            $html .= '</li>';
-        }
-
-        return $html;
-    }
-    
-    /**
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->render();
-    }
-    
-    /**
-     * Get nav tabs
-     *
-     * @return string
-     */
-    public function navTabs()
-    {
-        $html = '';
-        
-        foreach ($this->service->get() as $item) {
-            $html .= '<li class="'.$item->getClass().'">';
-            $html .= '<a href="'.$item->getUrl().'">'.$item->title.'</a>';
-            $html .= '</li>';
-        }
-        
-        return $html;
+        return $this->current;
     }
 
-    /**
-     * @param $parent_url
-     * @param $parent_title
-     *
-     * @return string
-     */
-    public function breadcrumb($parent_url = null, $parent_title = null)
-    {
-        $breadcrumb = new Breadcrumb($parent_url, $parent_title);
-        
-        return $breadcrumb->render($this->service->get());
-    }
-
-    /**
-     * @param $menu
-     * @return MenuService
-     */
-    protected function getMenu($menu)
-    {
-        $this->service = new $menu($this->getModelAndForget(), $this->request);
-        $this->service->items();
-        
-        return $this->service;
-    }
-    
-    /**
-     * Detect active
-     */
-    protected function detectActive()
-    {
-        $active = new Active();
-        $active->detect($this->service->get());
-        $active->detectParent($this->service->get());
-    }
-    
-    /**
-     * @param $menu
-     * @return bool
-     */
-    protected function hasInstance($menu)
-    {
-        return array_has($this->instance, $menu);
-    }
-    
-    /**
-     * @param $menu
-     */
-    protected function pullInstance($menu)
-    {
-        $this->instance[$menu] = $this->service;
-    }
-    
     /**
      * @return mixed
      */
@@ -187,11 +66,61 @@ class Menu
         if (is_null($this->model)) {
             return;
         }
-        
+
         $model = clone $this->model;
-        
         $this->model = null;
-        
+
         return $model;
+    }
+
+    /**
+     * @param string $menu
+     * @return bool
+     */
+    protected function hasInstance($menu)
+    {
+        return array_has($this->instance, $menu);
+    }
+
+    /**
+     * @param string $menu
+     * @return MenuableContract|null
+     */
+    protected function getInstance($menu)
+    {
+        return $this->hasInstance($menu) ? $this->instance[$menu] : null;
+    }
+
+    /**
+     * @param MenuableContract $menu
+     * @return $this
+     */
+    protected function setInstance(MenuableContract $menu)
+    {
+        $this->current = $menu;
+        $this->instance[get_class($menu)] = $menu;
+
+        return $this;
+    }
+
+    /**
+     * @param string $name
+     * @param \Illuminate\Database\Eloquent\Model $model
+     * @throws Exception
+     */
+    protected function loadInstance($name, $model)
+    {
+        try {
+            $menu = new $name($model);
+            $menu->items();
+
+            $detect = new ActiveDetect($this->request);
+            $detect->items($menu->get());
+
+            $this->setInstance($menu);
+        }
+        catch (Exception $ex) {
+            throw $ex;
+        }
     }
 }

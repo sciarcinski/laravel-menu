@@ -2,44 +2,27 @@
 
 namespace Sciarcinski\LaravelMenu\Services;
 
-use Illuminate\Http\Request;
+use Sciarcinski\LaravelMenu\Contracts\Menuable as MenuableContract;
+use Sciarcinski\LaravelMenu\Breadcrumb;
 use Sciarcinski\LaravelMenu\Item;
-use Sciarcinski\LaravelMenu\MenuInterface;
-use Sciarcinski\LaravelMenu\Builder;
 
-abstract class Menu implements MenuInterface
+abstract class Menu implements MenuableContract
 {
+    /** @var array */
     protected $items = [];
     
     /** @var mixed */
     protected $model;
     
-    /** @var Request */
-    protected $request;
-    
-    public $default_url = 'javascript:;';
-    
-    public $icon_parent_left = 'fa-angle-double-right';
-    
-    public $icon_parent_right = 'fa-angle-left';
-    
-    public $icon_child_left = '';
-
-    public $tree_class = 'nav-second-level nav';
-
     /**
      * @param mixed $model
-     * @param Request $request
      */
-    public function __construct($model, Request $request)
+    public function __construct($model)
     {
         $this->model = $model;
-        $this->request = $request;
     }
 
     /**
-     * Get items
-     *
      * @return array
      */
     public function get()
@@ -48,47 +31,113 @@ abstract class Menu implements MenuInterface
     }
     
     /**
-     * Add item
-     *
-     * @param $title
-     * @param $route
-     * @param $icon_left
-     * @param $class
-     * @return Builder
+     * @param string $title
+     * @return Item
      */
-    public function add($title, $route = null, $icon_left = null, $class = null)
+    public function add($title)
     {
-        $item = new Item($this);
-        $this->items[] = $item;
-        
-        return $item->add($title, $route, $icon_left, $class);
+        $this->items[] = $item = new Item($this);        
+        return $item->title($title);
     }
-    
+
     /**
-     * @param $icon
-     *
      * @return string
      */
-    public function getIconLeft($icon)
+    public function defaultUrl()
     {
-        return '<i class="fa '.$icon.'"></i>';
+        return 'javascript:;';
     }
-    
+
     /**
-     * @param $icon
-     *
      * @return string
      */
-    public function getIconRight($icon)
+    public function activeItemClassName()
     {
-        return '<span class="pull-right-container"><i class="fa '.$icon.' pull-right"></i></span>';
+        return 'active';
     }
-    
+
+    /**
+     * @return string
+     */
+    public function activeLinkClassName()
+    {
+        return '';
+    }
+
     /**
      * @return bool
      */
     public function hasModel()
     {
         return !is_null($this->model);
+    }
+
+    /**
+     * @param array|null $items
+     * @return string
+     */
+    public function render($items = null)
+    {
+        $html = '';
+
+        /* @var $item Item */
+        foreach (is_null($items) ? $this->get() : $items as $item) {
+            $html .= '<li '.$item->getItemAttributes().'>';
+            $html .= $this->link($item);
+
+            if ($item->hasChildren()) {
+                $html .= $this->children($item);
+            }
+
+            $html .= '</li>';
+        }
+
+        return $html;
+    }
+
+    /**
+     * @param Item $item
+     * @return string
+     */
+    protected function link(Item $item)
+    {
+        $html = '<a href="'.$item->getUrl().'" '.$item->getLinkAttributes().'>';
+        $html .= $item->getBefore().'<span>'.$item->getTitle().'</span>'.$item->getAfter();
+        $html .= '</a>';
+
+        return $html;
+    }
+
+    /**
+     * @param Item $item
+     * @return string
+     */
+    protected function children(Item $item)
+    {
+        $html = '<ul>';
+        $html .= $this->render($item->getChildren());
+        $html .= '</ul>';
+
+        return $html;
+    }
+
+    /**
+     * @param string $parentUrl
+     * @param string $parentTitle
+     * @return string
+     */
+    public function breadcrumb($parentUrl = null, $parentTitle = null)
+    {
+        $breadcrumb = new Breadcrumb($parentUrl, $parentTitle);
+
+        return $breadcrumb->render($this->service->get());
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->render();
     }
 }
