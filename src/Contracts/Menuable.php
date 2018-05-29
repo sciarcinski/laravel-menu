@@ -52,9 +52,9 @@ interface Menuable
     public function render($items = null);
 
     /**
-     * @param string $parentUrl
      * @param string $parentTitle
+     * @param string $parentUrl
      * @return string
      */
-    public function breadcrumb($parentUrl = null, $parentTitle = null);
+    public function breadcrumb($parentTitle = null, $parentUrl = null);
 }

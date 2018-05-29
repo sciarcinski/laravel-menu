@@ -144,15 +144,17 @@ abstract class Menu implements MenuableContract
     }
     
     /**
-     * @param string $parentUrl
      * @param string $parentTitle
+     * @param string $parentUrl
      * @return string
      */
-    public function breadcrumb($parentUrl = null, $parentTitle = null)
+    public function breadcrumb($parentTitle = null, $parentUrl = null)
     {
-        $breadcrumb = new Breadcrumb($parentUrl, $parentTitle);
+        $breadcrumb = new Breadcrumb;
+        $breadcrumb->parent($parentTitle, $parentUrl);
+        $breadcrumb->items($this->get());
 
-        return $breadcrumb->render($this->service->get());
+        return $breadcrumb->render();
     }
 
     /**

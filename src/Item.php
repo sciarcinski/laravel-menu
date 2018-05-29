@@ -430,6 +430,14 @@ class Item
     /**
      * @return bool
      */
+    public function isActive()
+    {
+        return $this->active;
+    }
+
+    /**
+     * @return bool
+     */
     public function hasChildren()
     {
         return !empty($this->children);
