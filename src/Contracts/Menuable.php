@@ -36,25 +36,15 @@ interface Menuable
     public function activeLinkClassName();
 
     /**
-     * @return array
-     */
-    public function itemAttributes();
-
-    /**
-     * @return array
-     */
-    public function linkAttributes();
-
-    /**
      * @param array|null $items
      * @return string
      */
     public function render($items = null);
 
     /**
-     * @param string $parentTitle
      * @param string $parentUrl
+     * @param string $parentTitle
      * @return string
      */
-    public function breadcrumb($parentTitle = null, $parentUrl = null);
+    public function breadcrumb($parentUrl = null, $parentTitle = null);
 }

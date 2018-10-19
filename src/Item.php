@@ -137,9 +137,7 @@ class Item
      */
     public function getItemAttributes()
     {
-        $attributes = $this->mergeAttributes($this->itemAttributes, $this->service->itemAttributes());
-
-        return $this->getAttributes($attributes);
+        return $this->getAttributes($this->itemAttributes);
     }
 
     /**
@@ -147,9 +145,7 @@ class Item
      */
     public function getLinkAttributes()
     {
-        $attributes = $this->mergeAttributes($this->linkAttributes, $this->service->linkAttributes());
-
-        return $this->getAttributes($attributes);
+        return $this->getAttributes($this->linkAttributes);
     }
 
     /**
@@ -161,7 +157,7 @@ class Item
         $html = '';
 
         foreach ($attributes as $key => $value) {
-            $html .= $key.'="'.trim($value).'" ';
+            $html .= $key.'="'.$value.'" ';
         }
 
         return $html;
@@ -430,17 +426,17 @@ class Item
     /**
      * @return bool
      */
-    public function isActive()
-    {
-        return $this->active;
-    }
-
-    /**
-     * @return bool
-     */
     public function hasChildren()
     {
         return !empty($this->children);
+    }
+    
+    /**
+     * @return bool
+     */
+    public function hasActive()
+    {
+        return $this->active;
     }
 
     /**
@@ -454,22 +450,5 @@ class Item
                 unset($items[$key]);
             }
         }
-    }
-
-    /**
-     * @param array $attributes
-     * @param array $merge
-     * @return array
-     */
-    protected function mergeAttributes(array $attributes, array $merge)
-    {
-        foreach ($attributes as $key => $attribute) {
-            if (array_key_exists($key, $merge)) {
-                $attributes[$key] .= ' ' . $merge[$key];
-                unset($merge[$key]);
-            }
-        }
-
-        return array_merge($attributes, $merge);
     }
 }

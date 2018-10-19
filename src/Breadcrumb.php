@@ -2,124 +2,98 @@
 
 namespace Sciarcinski\LaravelMenu;
 
+use Sciarcinski\LaravelMenu\Item;
+
 class Breadcrumb
 {
-    /** @var array */
-    protected $parent = [];
-
-    /** @var array */
-    protected $items = [];
-
-    /** @var array */
+    protected $parent_url;
+    protected $parent_title;
     protected $breadcrumb = [];
 
     /**
-     * @return array
+     * @param $parent_url
+     * @param $parent_title
      */
-    public function get()
+    public function __construct($parent_url, $parent_title)
     {
-        if (!empty($this->parent)) {
-            $this->addItem($this->parent['title'], $this->parent['url']);
-        }
-
-        $this->findItems($this->items);
-        $this->activeLastElement();
-
-        return $this->breadcrumb;
+        $this->parent_url = $parent_url;
+        $this->parent_title = $parent_title;
     }
-
+    
     /**
-     * @param string $title
-     * @param string $url
-     * @return $this
+     * @param $menu_items
+     * @return string
      */
-    public function parent($title, $url)
+    public function render($menu_items)
     {
-        if (!is_null($title) && !is_null($url)) {
-            $this->parent = [
-                'title' => $title,
-                'url' => $url
-            ];
+        if (is_array($menu_items)) {
+            $item = array_first($menu_items, function ($key, $item) {
+                if ($key instanceof Item) {
+                    $item = $key;
+                }
+                
+                return $item->hasActive();
+            });
+            
+            $this->add($item);
+            $this->children($item);
         }
         
-        return $this;
+        return $this->getHtml();
     }
-
-    /**
-     * @param array $items
-     * @return $this
-     */
-    public function items(array $items)
-    {
-        $this->items = $items;
-
-        return $this;
-    }
-
+    
     /**
      * @return string
      */
-    public function render()
+    protected function getHtml()
     {
-        $items = $this->get();
-
-        $html = '';
-
-        foreach ($items as $item) {
-            $html .='<li class="breadcrumb-item">';
-
-            if ($item['active']) {
-                $html .= $item['title'];
-            } else {
-                $html .= '<a href="'.$item['url'].'">'.$item['title'].'</a>';
+        $html = $this->getItemList($this->parent_url, $this->parent_title);
+        
+        foreach ($this->breadcrumb as $breadcrumb) {
+            if ($this->parent_url !== $breadcrumb->url) {
+                $html .= $this->getItemList($breadcrumb->url, $breadcrumb->title);
             }
-
-            $html .= '</li>';
         }
-
+        
         return $html;
     }
-
+    
     /**
-     * @param array $items
+     * @param $url
+     * @param $title
+     * @return string
      */
-    protected function findItems(array $items)
+    protected function getItemList($url, $title)
     {
-        /* @var $item Item */
-        foreach ($items as $item) {
-            if ($item->isActive()) {
-                $this->addItem($item->getTitle(), $item->getUrl());
-                $this->findItems($item->getChildren());
-                break;
-            }
+        if (!is_null($url) && !is_null($title)) {
+            return '<li><a href="'.$url.'">'.$title.'</a></li>';
         }
     }
 
     /**
-     * @param string $title
-     * @param string $url
+     * Add item the breadcrumb
+     *
+     * @param Item $item
      */
-    protected function addItem($title, $url)
+    protected function add($item)
     {
-        $this->breadcrumb[] = [
-            'title' => $title,
-            'url' => $url,
-            'active' => false
-        ];
-    }
-
-    /**
-     * @return void
-     */
-    protected function activeLastElement()
-    {
-        $min = empty($this->parent) ? 0 : 1;
-        $count = count($this->breadcrumb);
-
-        if ($count <= $min) {
-            return;
+        if ($item instanceof Item) {
+            $this->breadcrumb[] = (object)[
+                'url' => $item->getUrl(),
+                'title' => $item->getTitle(),
+            ];
         }
-
-        $this->breadcrumb[$count - 1]['active'] = true;
+    }
+    
+    /**
+     * Find active item in children
+     *
+     * @param Item $item
+     */
+    protected function children($item)
+    {
+        if ($item instanceof Item && $item->hasChildren()) {
+            $this->render($item->children);
+        }
     }
 }
