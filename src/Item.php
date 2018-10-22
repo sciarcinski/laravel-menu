@@ -66,6 +66,8 @@ class Item
     {
         $this->service = $service;
         $this->parent = $parent;
+        $this->setItemAttributes($service->getItemAttributes());
+        $this->setLinkAttributes($service->getLinkAttributes());
     }
 
     /**
@@ -74,6 +76,68 @@ class Item
     public function service()
     {
         return $this->service;
+    }
+    
+    /**
+     * @param string $id
+     * @return $this
+     */
+    public function setItemId($id)
+    {
+        $this->itemAttributes['id'] = $id;
+        return $this;
+    }
+
+    /**
+     * @param string $class
+     * @return $this
+     */
+    public function setItemClass($class)
+    {
+        if (!array_key_exists('class', $this->itemAttributes)) {
+            $this->itemAttributes['class'] = [];
+        }
+        
+        $this->itemAttributes['class'] = array_unique(array_merge($this->itemAttributes['class'], explode(' ', $class)));
+        
+        return $this;
+    }
+
+    /**
+     * @param string $class
+     * @return $this
+     */
+    public function setLinkClass($class)
+    {
+        if (!array_key_exists('class', $this->linkAttributes)) {
+            $this->linkAttributes['class'] = [];
+        }
+
+        $this->linkAttributes['class'] = array_unique(array_merge($this->linkAttributes['class'], explode(' ', $class)));
+
+        return $this;
+    }
+    
+    /**
+     * @param array $attributes
+     * @return $this
+     */
+    public function setItemAttributes(array $attributes)
+    {
+        $this->itemAttributes = array_merge($this->itemAttributes, $attributes);
+        
+        return $this;
+    }
+
+    /**
+     * @param array $attributes
+     * @return $this
+     */
+    public function setLinkAttributes(array $attributes)
+    {
+        $this->linkAttributes = array_merge($this->linkAttributes, $attributes);
+
+        return $this;
     }
 
     /**
@@ -157,6 +221,10 @@ class Item
         $html = '';
 
         foreach ($attributes as $key => $value) {
+            if (is_array($value)) {
+                $value = implode(' ', $value);
+            }
+            
             $html .= $key.'="'.$value.'" ';
         }
 
@@ -213,8 +281,8 @@ class Item
     public function activate()
     {
         $this->active = true;
-        $this->itemClass($this->service()->activeItemClassName());
-        $this->itemClass($this->service()->activeLinkClassName());
+        $this->setItemClass($this->service()->activeItemClassName());
+        $this->setLinkClass($this->service()->activeLinkClassName());
 
         if ($this->parent()) {
             $this->parent()->activate();
@@ -269,69 +337,6 @@ class Item
         $this->action = $action;
         $this->parameters = $parameters;
         $this->url(action($this->action, $parameters));
-
-        return $this;
-    }
-
-    /**
-     * @param array $attributes
-     * @return $this
-     */
-    public function itemAttributes(array $attributes)
-    {
-        $this->itemAttributes = array_merge($this->itemAttributes, $attributes);
-        
-        return $this;
-    }
-
-    /**
-     * @param array $attributes
-     * @return $this
-     */
-    public function linkAttributes(array $attributes)
-    {
-        $this->linkAttributes = array_merge($this->linkAttributes, $attributes);
-
-        return $this;
-    }
-
-    /**
-     * @param string $id
-     * @return $this
-     */
-    public function itemId($id)
-    {
-        $this->itemAttributes(['id' => $id]);
-
-        return $this;
-    }
-
-    /**
-     * @param string $class
-     * @return $this
-     */
-    public function itemClass($class)
-    {
-        if (array_key_exists('class', $this->itemAttributes)) {
-            $class .= ' ' . $this->itemAttributes['class'];
-        }
-
-        $this->itemAttributes(['class' => $class]);
-
-        return $this;
-    }
-
-    /**
-     * @param string $class
-     * @return $this
-     */
-    public function linkClass($class)
-    {
-        if (array_key_exists('class', $this->linkAttributes)) {
-            $class .= ' ' . $this->linkAttributes['class'];
-        }
-
-        $this->linkAttributes(['class' => $class]);
 
         return $this;
     }

@@ -11,6 +11,12 @@ abstract class Menu implements MenuableContract
     /** @var array */
     protected $items = [];
     
+    /** @var array */
+    protected $itemAttributes = [];
+    
+    /** @var array */
+    protected $linkAttributes = [];
+    
     /** @var mixed */
     protected $model;
     
@@ -30,6 +36,22 @@ abstract class Menu implements MenuableContract
         return $this->items;
     }
     
+    /**
+     * @return array
+     */
+    public function getItemAttributes()
+    {
+        return $this->itemAttributes;
+    }
+    
+    /**
+     * @return array
+     */
+    public function getLinkAttributes()
+    {
+        return $this->linkAttributes;
+    }
+
     /**
      * @param string $title
      * @return Item
