@@ -2,24 +2,24 @@
 
 namespace Sciarcinski\LaravelMenu\Services;
 
-use Sciarcinski\LaravelMenu\Contracts\Menuable as MenuableContract;
 use Sciarcinski\LaravelMenu\Breadcrumb;
+use Sciarcinski\LaravelMenu\Contracts\Menuable as MenuableContract;
 use Sciarcinski\LaravelMenu\Item;
 
 abstract class Menu implements MenuableContract
 {
     /** @var array */
     protected $items = [];
-    
+
     /** @var array */
     protected $itemAttributes = [];
-    
+
     /** @var array */
     protected $linkAttributes = [];
-    
+
     /** @var mixed */
     protected $model;
-    
+
     /**
      * @param mixed $model
      */
@@ -35,7 +35,7 @@ abstract class Menu implements MenuableContract
     {
         return $this->items;
     }
-    
+
     /**
      * @return array
      */
@@ -43,7 +43,7 @@ abstract class Menu implements MenuableContract
     {
         return $this->itemAttributes;
     }
-    
+
     /**
      * @return array
      */
@@ -58,7 +58,7 @@ abstract class Menu implements MenuableContract
      */
     public function add($title)
     {
-        $this->items[] = $item = new Item($this);        
+        $this->items[] = $item = new Item($this);
         return $item->title($title);
     }
 
@@ -83,6 +83,14 @@ abstract class Menu implements MenuableContract
      */
     public function activeLinkClassName()
     {
+        return 'active';
+    }
+
+    /**
+     * @return string
+     */
+    public function itemChildrenClassName()
+    {
         return '';
     }
 
@@ -102,9 +110,9 @@ abstract class Menu implements MenuableContract
     {
         $html = '';
 
-        /* @var $item Item */
+        /** @var Item $item */
         foreach (is_null($items) ? $this->get() : $items as $item) {
-            $html .= '<li '.$item->getItemAttributes().'>';
+            $html .= '<li ' . $item->getItemAttributes() . '>';
             $html .= $this->link($item);
 
             if ($item->hasChildren()) {
@@ -123,8 +131,8 @@ abstract class Menu implements MenuableContract
      */
     protected function link(Item $item)
     {
-        $html = '<a href="'.$item->getUrl().'" '.$item->getLinkAttributes().'>';
-        $html .= $item->getBefore().'<span>'.$item->getTitle().'</span>'.$item->getAfter();
+        $html = '<a href="' . $item->getUrl() . '" ' . $item->getLinkAttributes() . '>';
+        $html .= $this->linkTitile($item);
         $html .= '</a>';
 
         return $html;
@@ -134,9 +142,26 @@ abstract class Menu implements MenuableContract
      * @param Item $item
      * @return string
      */
+    public function linkTitile(Item $item)
+    {
+        return $item->getBefore() . '<span>' . $item->getTitle() . '</span>' . $item->getAfter();
+    }
+
+    /**
+     * @return string
+     */
+    public function childrenClassName()
+    {
+        return '';
+    }
+
+    /**
+     * @param Item $item
+     * @return string
+     */
     protected function children(Item $item)
     {
-        $html = '<ul>';
+        $html = '<ul class="' . $this->childrenClassName() . '">';
         $html .= $this->render($item->getChildren());
         $html .= '</ul>';
 
@@ -146,12 +171,13 @@ abstract class Menu implements MenuableContract
     /**
      * @param string $parentUrl
      * @param string $parentTitle
+     * @param string $itemClass
      * @return string
      */
-    public function breadcrumb($parentUrl = null, $parentTitle = null)
+    public function breadcrumb($parentUrl = null, $parentTitle = null, $itemClass = 'breadcrumb-item')
     {
-        $breadcrumb = new Breadcrumb($parentUrl, $parentTitle);
-        
+        $breadcrumb = new Breadcrumb($parentUrl, $parentTitle, $itemClass);
+
         return $breadcrumb->render($this->get());
     }
 

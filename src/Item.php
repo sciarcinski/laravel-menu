@@ -68,6 +68,10 @@ class Item
         $this->parent = $parent;
         $this->setItemAttributes($service->getItemAttributes());
         $this->setLinkAttributes($service->getLinkAttributes());
+
+        if ($this->hasChildren()) {
+            $this->setItemClass($service->itemChildrenClassName());
+        }
     }
 
     /**
@@ -77,7 +81,7 @@ class Item
     {
         return $this->service;
     }
-    
+
     /**
      * @param string $id
      * @return $this
@@ -97,9 +101,9 @@ class Item
         if (!array_key_exists('class', $this->itemAttributes)) {
             $this->itemAttributes['class'] = [];
         }
-        
+
         $this->itemAttributes['class'] = array_unique(array_merge($this->itemAttributes['class'], explode(' ', $class)));
-        
+
         return $this;
     }
 
@@ -117,7 +121,7 @@ class Item
 
         return $this;
     }
-    
+
     /**
      * @param array $attributes
      * @return $this
@@ -125,7 +129,7 @@ class Item
     public function setItemAttributes(array $attributes)
     {
         $this->itemAttributes = array_merge($this->itemAttributes, $attributes);
-        
+
         return $this;
     }
 
@@ -224,8 +228,8 @@ class Item
             if (is_array($value)) {
                 $value = implode(' ', $value);
             }
-            
-            $html .= $key.'="'.$value.'" ';
+
+            $html .= $key . '="' . $value . '" ';
         }
 
         return $html;
@@ -363,7 +367,6 @@ class Item
         return $this;
     }
 
-
     /**
      * @param mixed $routes
      * @return $this
@@ -435,7 +438,7 @@ class Item
     {
         return !empty($this->children);
     }
-    
+
     /**
      * @return bool
      */

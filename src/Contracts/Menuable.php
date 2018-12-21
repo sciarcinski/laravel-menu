@@ -8,7 +8,7 @@ interface Menuable
      * @return array
      */
     public function get();
-    
+
     /**
      * @param $title
      * @return \Sciarcinski\LaravelMenu\Item
@@ -34,6 +34,11 @@ interface Menuable
      * @return string
      */
     public function activeLinkClassName();
+
+    /**
+     * @return string
+     */
+    public function itemChildrenClassName();
 
     /**
      * @param array|null $items
