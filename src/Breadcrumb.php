@@ -93,7 +93,7 @@ class Breadcrumb
     protected function children($item)
     {
         if ($item instanceof Item && $item->hasChildren()) {
-            $this->render($item->children);
+            $this->render($item->getChildren());
         }
     }
 }
