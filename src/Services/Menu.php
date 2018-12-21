@@ -112,6 +112,10 @@ abstract class Menu implements MenuableContract
 
         /** @var Item $item */
         foreach (is_null($items) ? $this->get() : $items as $item) {
+            if ($item->hasChildren()) {
+                $item->setItemClass($this->itemChildrenClassName());
+            }
+
             $html .= '<li ' . $item->getItemAttributes() . '>';
             $html .= $this->link($item);
 

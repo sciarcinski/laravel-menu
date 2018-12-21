@@ -68,10 +68,6 @@ class Item
         $this->parent = $parent;
         $this->setItemAttributes($service->getItemAttributes());
         $this->setLinkAttributes($service->getLinkAttributes());
-
-        if ($this->hasChildren()) {
-            $this->setItemClass($service->itemChildrenClassName());
-        }
     }
 
     /**

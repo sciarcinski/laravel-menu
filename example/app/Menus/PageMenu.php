@@ -2,20 +2,11 @@
 
 namespace App\Menus;
 
+use Sciarcinski\LaravelMenu\Item;
 use Sciarcinski\LaravelMenu\Services\Menu;
 
 class PageMenu extends Menu
 {
-    /** @var array */
-    protected $itemAttributes = [
-        'class' => ['app-menu__item'],
-    ];
-
-    /** @var array */
-    protected $linkAttributes = [
-        'class' => ['app-menu__item'],
-    ];
-
     /**
      * Route::get('page/{slug}', 'PageController@show')->name('page.show');
      */
@@ -33,6 +24,30 @@ class PageMenu extends Menu
         $about_level_3->add('Level 3.2')->route('page.show', 'level-3.2');
 
         $this->add('Contact')->route('page.show', 'contact');
+    }
+
+    /**
+     * --------------------------------------------------------------------------------
+     *                           Optional settings
+     * --------------------------------------------------------------------------------
+     */
+
+    /** @var array */
+    protected $itemAttributes = [
+        'class' => ['app-menu__item'],
+    ];
+
+    /** @var array */
+    protected $linkAttributes = [
+        'class' => ['app-menu__item'],
+    ];
+
+    /**
+     * @return string
+     */
+    public function defaultUrl()
+    {
+        return '#';
     }
 
     /**
@@ -57,18 +72,6 @@ class PageMenu extends Menu
      */
     public function linkTitile(Item $item)
     {
-        $before = $item->getBefore();
-
-        if (!empty($before)) {
-            $before = '<i class="app-menu__icon ' . $before . '"></i>';
-        }
-
-        $after = $item->getAfter();
-
-        if ($item->hasChildren()) {
-            $after .= ' <i class="treeview-indicator fa fa-angle-right"></i>';
-        }
-
-        return $before . '<span class="app-menu__label">' . $item->getTitle() . '</span>' . $after;
+        return $item->getBefore() . '<span class="app-menu__label">' . $item->getTitle() . '</span>' . $item->getAfter();
     }
 }
