@@ -13,7 +13,7 @@ class MenusServiceProvider extends ServiceProvider
      * @var bool
      */
     protected $defer = true;
-    
+
     /**
      * Register the service provider.
      *
@@ -25,12 +25,12 @@ class MenusServiceProvider extends ServiceProvider
             return new Menu($app['request']);
         });
     }
-    
+
     public function boot()
     {
         $this->commands(MenuMakeCommand::class);
     }
-    
+
     /**
      *  Get the services provided by the provider.
      *

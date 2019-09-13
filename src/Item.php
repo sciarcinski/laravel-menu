@@ -80,21 +80,24 @@ class Item
 
     /**
      * @param string $id
+     *
      * @return $this
      */
     public function setItemId($id)
     {
         $this->itemAttributes['id'] = $id;
+
         return $this;
     }
 
     /**
      * @param string $class
+     *
      * @return $this
      */
     public function setItemClass($class)
     {
-        if (!array_key_exists('class', $this->itemAttributes)) {
+        if (! array_key_exists('class', $this->itemAttributes)) {
             $this->itemAttributes['class'] = [];
         }
 
@@ -105,11 +108,12 @@ class Item
 
     /**
      * @param string $class
+     *
      * @return $this
      */
     public function setLinkClass($class)
     {
-        if (!array_key_exists('class', $this->linkAttributes)) {
+        if (! array_key_exists('class', $this->linkAttributes)) {
             $this->linkAttributes['class'] = [];
         }
 
@@ -120,6 +124,7 @@ class Item
 
     /**
      * @param array $attributes
+     *
      * @return $this
      */
     public function setItemAttributes(array $attributes)
@@ -131,6 +136,7 @@ class Item
 
     /**
      * @param array $attributes
+     *
      * @return $this
      */
     public function setLinkAttributes(array $attributes)
@@ -214,6 +220,7 @@ class Item
 
     /**
      * @param array $attributes
+     *
      * @return string
      */
     protected function getAttributes(array $attributes)
@@ -265,6 +272,7 @@ class Item
 
     /**
      * @param string $title
+     *
      * @return $this
      */
     public function add($title)
@@ -293,6 +301,7 @@ class Item
 
     /**
      * @param string $title
+     *
      * @return $this
      */
     public function title($title)
@@ -304,6 +313,7 @@ class Item
 
     /**
      * @param string $url
+     *
      * @return $this
      */
     public function url($url)
@@ -316,6 +326,7 @@ class Item
     /**
      * @param string $route
      * @param array $parameters
+     *
      * @return $this
      */
     public function route($route, array $parameters = [])
@@ -330,6 +341,7 @@ class Item
     /**
      * @param string $action
      * @param array $parameters
+     *
      * @return $this
      */
     public function action($action, array $parameters = [])
@@ -343,6 +355,7 @@ class Item
 
     /**
      * @param string $before
+     *
      * @return $this
      */
     public function before($before)
@@ -354,6 +367,7 @@ class Item
 
     /**
      * @param string $after
+     *
      * @return $this
      */
     public function after($after)
@@ -365,6 +379,7 @@ class Item
 
     /**
      * @param mixed $routes
+     *
      * @return $this
      */
     public function activateForRoutes($routes)
@@ -379,6 +394,7 @@ class Item
 
     /**
      * @param mixed $paths
+     *
      * @return $this
      */
     public function activateForPaths($paths)
@@ -393,6 +409,7 @@ class Item
 
     /**
      * @param mixed $routes
+     *
      * @return $this
      */
     public function notActivateForRoutes($routes)
@@ -407,6 +424,7 @@ class Item
 
     /**
      * @param mixed $paths
+     *
      * @return $this
      */
     public function notActivateForPaths($paths)
@@ -424,7 +442,7 @@ class Item
      */
     public function isNotActivateEmpty()
     {
-        return (empty($this->notActivateRoutes) && empty($this->notActivatePaths));
+        return empty($this->notActivateRoutes) && empty($this->notActivatePaths);
     }
 
     /**
@@ -432,7 +450,7 @@ class Item
      */
     public function hasChildren()
     {
-        return !empty($this->children);
+        return ! empty($this->children);
     }
 
     /**

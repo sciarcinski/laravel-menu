@@ -27,7 +27,7 @@ class ActiveDetect
             if ($this->isActive($item)) {
                 $item->activate();
             }
-            
+
             if ($item->hasChildren()) {
                 $this->items($item->getChildren());
             }
@@ -36,6 +36,7 @@ class ActiveDetect
 
     /**
      * @param Item $item
+     *
      * @return bool
      */
     protected function isActive(Item $item)
@@ -53,14 +54,14 @@ class ActiveDetect
 
     /**
      * @param Item $item
+     *
      * @return bool
      */
     protected function checkActive(Item $item)
     {
-        if ($this->request->route()->getName() === $item->getRoute() 
+        if ($this->request->route()->getName() === $item->getRoute()
             || $this->checkRoute($item->getActivateRoutes())
-            || $this->checkPaths($item->getActivatePaths()))
-        {
+            || $this->checkPaths($item->getActivatePaths())) {
             return true;
         }
 
@@ -69,6 +70,7 @@ class ActiveDetect
 
     /**
      * @param Item $item
+     *
      * @return bool
      */
     protected function checkNotActive(Item $item)
@@ -77,11 +79,12 @@ class ActiveDetect
             return false;
         }
 
-        return ($this->checkRoute($item->getNotActivateRoutes()) || $this->checkPaths($item->getNotActivatePaths()));
+        return $this->checkRoute($item->getNotActivateRoutes()) || $this->checkPaths($item->getNotActivatePaths());
     }
 
     /**
      * @param array $items
+     *
      * @return bool
      */
     protected function checkRoute(array $items)
@@ -91,6 +94,7 @@ class ActiveDetect
 
     /**
      * @param array $items
+     *
      * @return bool
      */
     protected function checkPaths(array $items)

@@ -11,6 +11,7 @@ interface Menuable
 
     /**
      * @param $title
+     *
      * @return \Sciarcinski\LaravelMenu\Item
      */
     public function add($title);
@@ -42,6 +43,7 @@ interface Menuable
 
     /**
      * @param array|null $items
+     *
      * @return string
      */
     public function render($items = null);
@@ -49,6 +51,7 @@ interface Menuable
     /**
      * @param string $parentUrl
      * @param string $parentTitle
+     *
      * @return string
      */
     public function breadcrumb($parentUrl = null, $parentTitle = null);

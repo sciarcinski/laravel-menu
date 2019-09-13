@@ -1,7 +1,7 @@
 {
     "name": "sciarcinski/laravel-menu",
-    "description": "Menu generator package for the Laravel 5 framework",
-    "keywords": ["menu", "laravel", "laravel 5"],
+    "description": "Menu generator package for the Laravel 5.*, Laravel 6.0 framework",
+    "keywords": ["menu", "laravel", "laravel 5", "laravel 6"],
     "license": "MIT",
     "authors": [
         {
@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "php": ">=7.0"
+        "php": ">=7.2"
     },
     "autoload": {
         "psr-4": {

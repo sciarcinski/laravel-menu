@@ -54,11 +54,13 @@ abstract class Menu implements MenuableContract
 
     /**
      * @param string $title
+     *
      * @return Item
      */
     public function add($title)
     {
         $this->items[] = $item = new Item($this);
+
         return $item->title($title);
     }
 
@@ -99,11 +101,12 @@ abstract class Menu implements MenuableContract
      */
     public function hasModel()
     {
-        return !is_null($this->model);
+        return ! is_null($this->model);
     }
 
     /**
      * @param array|null $items
+     *
      * @return string
      */
     public function render($items = null)
@@ -131,6 +134,7 @@ abstract class Menu implements MenuableContract
 
     /**
      * @param Item $item
+     *
      * @return string
      */
     protected function link(Item $item)
@@ -144,6 +148,7 @@ abstract class Menu implements MenuableContract
 
     /**
      * @param Item $item
+     *
      * @return string
      */
     public function linkTitile(Item $item)
@@ -161,6 +166,7 @@ abstract class Menu implements MenuableContract
 
     /**
      * @param Item $item
+     *
      * @return string
      */
     protected function children(Item $item)
@@ -176,6 +182,7 @@ abstract class Menu implements MenuableContract
      * @param string $parentUrl
      * @param string $parentTitle
      * @param string $itemClass
+     *
      * @return string
      */
     public function breadcrumb($parentUrl = null, $parentTitle = null, $itemClass = 'breadcrumb-item')

@@ -2,7 +2,7 @@
 
 namespace Sciarcinski\LaravelMenu;
 
-use Sciarcinski\LaravelMenu\Item;
+use Illuminate\Support\Arr;
 
 class Breadcrumb
 {
@@ -19,74 +19,76 @@ class Breadcrumb
         $this->parent_url = $parent_url;
         $this->parent_title = $parent_title;
     }
-    
+
     /**
      * @param $menu_items
+     *
      * @return string
      */
     public function render($menu_items)
     {
         if (is_array($menu_items)) {
-            $item = array_first($menu_items, function ($key, $item) {
+            $item = Arr::first($menu_items, function ($key, $item) {
                 if ($key instanceof Item) {
                     $item = $key;
                 }
-                
+
                 return $item->hasActive();
             });
-            
+
             $this->add($item);
             $this->children($item);
         }
-        
+
         return $this->getHtml();
     }
-    
+
     /**
      * @return string
      */
     protected function getHtml()
     {
         $html = $this->getItemList($this->parent_url, $this->parent_title);
-        
+
         foreach ($this->breadcrumb as $breadcrumb) {
             if ($this->parent_url !== $breadcrumb->url) {
                 $html .= $this->getItemList($breadcrumb->url, $breadcrumb->title);
             }
         }
-        
+
         return $html;
     }
-    
+
     /**
      * @param $url
      * @param $title
+     *
      * @return string
      */
     protected function getItemList($url, $title)
     {
-        if (!is_null($url) && !is_null($title)) {
-            return '<li><a href="'.$url.'">'.$title.'</a></li>';
+        if (! is_null($url) && ! is_null($title)) {
+            return '<li><a href="' . $url . '">' . $title . '</a></li>';
         }
     }
 
     /**
-     * Add item the breadcrumb
+     * Add item the breadcrumb.
      *
      * @param Item $item
      */
     protected function add($item)
     {
         if ($item instanceof Item) {
-            $this->breadcrumb[] = (object)[
+            $this->breadcrumb[] = (object) [
                 'url' => $item->getUrl(),
                 'title' => $item->getTitle(),
             ];
         }
     }
-    
+
     /**
-     * Find active item in children
+     * Find active item in children.
      *
      * @param Item $item
      */

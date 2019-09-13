@@ -8,7 +8,7 @@ use Sciarcinski\LaravelMenu\Services\Menu;
 class PageMenu extends Menu
 {
     /**
-     * Route::get('page/{slug}', 'PageController@show')->name('page.show');
+     * Route::get('page/{slug}', 'PageController@show')->name('page.show');.
      */
     public function items()
     {
@@ -29,7 +29,7 @@ class PageMenu extends Menu
     /**
      * --------------------------------------------------------------------------------
      *                           Optional settings
-     * --------------------------------------------------------------------------------
+     * --------------------------------------------------------------------------------.
      */
 
     /** @var array */
@@ -68,6 +68,7 @@ class PageMenu extends Menu
 
     /**
      * @param Item $item
+     *
      * @return string
      */
     public function linkTitile(Item $item)

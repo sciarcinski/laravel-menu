@@ -3,7 +3,6 @@
 namespace Sciarcinski\LaravelMenu\Generators;
 
 use Illuminate\Console\GeneratorCommand;
-use Illuminate\Support\Str;
 
 class MenuMakeCommand extends GeneratorCommand
 {
@@ -13,21 +12,21 @@ class MenuMakeCommand extends GeneratorCommand
      * @var string
      */
     protected $name = 'menu:make';
-    
+
     /**
      * The console command description.
      *
      * @var string
      */
     protected $description = 'Create a new Menu service class.';
-    
+
     /**
      * The type of class being generated.
      *
      * @var string
      */
     protected $type = 'Menus';
-    
+
     /**
      * The model class to be used by menu.
      *
@@ -41,21 +40,22 @@ class MenuMakeCommand extends GeneratorCommand
      * @var string
      */
     protected $filename;
-    
+
     /**
      * Build the class with the given name.
      *
-     * @param  string $name
+     * @param string $name
+     *
      * @return string
      */
     protected function buildClass($name)
     {
         $stub = $this->files->get($this->getStub());
         $stub = $this->replaceNamespace($stub, $name)->replaceClass($stub, $name);
-        
+
         return $stub;
     }
-    
+
     /**
      * Get the stub file for the generator.
      *
@@ -65,11 +65,12 @@ class MenuMakeCommand extends GeneratorCommand
     {
         return __DIR__ . '/stubs/menu.stub';
     }
-    
+
     /**
      * Get the default namespace for the class.
      *
-     * @param  string $rootNamespace
+     * @param string $rootNamespace
+     *
      * @return string
      */
     protected function getDefaultNamespace($rootNamespace)

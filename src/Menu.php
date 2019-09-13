@@ -4,6 +4,8 @@ namespace Sciarcinski\LaravelMenu;
 
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Sciarcinski\LaravelMenu\Contracts\Menuable as MenuableContract;
 
 class Menu
@@ -13,7 +15,7 @@ class Menu
 
     /** @var MenuableContract */
     protected $current;
-    
+
     /** @var mixed */
     protected $model;
 
@@ -27,26 +29,28 @@ class Menu
     {
         $this->request = $request;
     }
-    
+
     /**
      * @param mixed $model
+     *
      * @return $this
      */
     public function model($model)
     {
         $this->model = $model;
-        
+
         return $this;
     }
 
     /**
      * @param $name
+     *
      * @return MenuableContract
      */
     public function get($name)
     {
-        $menu = '\\App\\Menus\\'.studly_case($name);
-        
+        $menu = '\\App\\Menus\\' . Str::studly($name);
+
         if ($this->hasInstance($menu)) {
             $this->setInstance(
                 $this->getInstance($menu)
@@ -54,7 +58,7 @@ class Menu
         } else {
             $this->loadInstance($menu, $this->getModelAndForget());
         }
-        
+
         return $this->current;
     }
 
@@ -75,15 +79,17 @@ class Menu
 
     /**
      * @param string $menu
+     *
      * @return bool
      */
     protected function hasInstance($menu)
     {
-        return array_has($this->instance, $menu);
+        return Arr::has($this->instance, $menu);
     }
 
     /**
      * @param string $menu
+     *
      * @return MenuableContract|null
      */
     protected function getInstance($menu)
@@ -93,6 +99,7 @@ class Menu
 
     /**
      * @param MenuableContract $menu
+     *
      * @return $this
      */
     protected function setInstance(MenuableContract $menu)
@@ -106,6 +113,7 @@ class Menu
     /**
      * @param string $name
      * @param \Illuminate\Database\Eloquent\Model $model
+     *
      * @throws Exception
      */
     protected function loadInstance($name, $model)
@@ -118,8 +126,7 @@ class Menu
             $detect->items($menu->get());
 
             $this->setInstance($menu);
-        }
-        catch (Exception $ex) {
+        } catch (Exception $ex) {
             throw $ex;
         }
     }
