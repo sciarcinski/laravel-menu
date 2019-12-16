@@ -165,6 +165,14 @@ class Item
     /**
      * @return array
      */
+    public function getParameters()
+    {
+        return $this->parameters;
+    }
+
+    /**
+     * @return array
+     */
     public function getChildren()
     {
         return $this->children;

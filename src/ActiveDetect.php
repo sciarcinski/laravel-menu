@@ -59,10 +59,28 @@ class ActiveDetect
      */
     protected function checkActive(Item $item)
     {
-        if ($this->request->route()->getName() === $item->getRoute()
-            || $this->checkRoute($item->getActivateRoutes())
-            || $this->checkPaths($item->getActivatePaths())) {
+        if (
+            $this->checkActiveRoute($item) ||
+            $this->checkRoute($item->getActivateRoutes()) ||
+            $this->checkPaths($item->getActivatePaths())
+        ) {
             return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param Item $item
+     *
+     * @return bool
+     */
+    protected function checkActiveRoute(Item $item)
+    {
+        $route = $this->request->route()->getName() === $item->getRoute();
+
+        if ($route) {
+            return empty(array_diff($this->request->route()->parameters(), $item->getParameters()));
         }
 
         return false;
